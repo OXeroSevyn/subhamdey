@@ -1,0 +1,6 @@
+{
+  "name": "subhamdey",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
