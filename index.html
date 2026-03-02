@@ -128,7 +128,9 @@
       border-radius: 50%;
       filter: blur(80px);
       opacity: 0;
-      animation: auraAnim ease-in-out infinite
+      animation: auraAnim ease-in-out infinite;
+      will-change: transform, opacity;
+      transform: translateZ(0)
     }
 
     .aura1 {
@@ -226,11 +228,13 @@
       gap: .5rem;
       padding: .6rem .8rem;
       background: rgba(10, 10, 26, .7);
-      backdrop-filter: blur(24px);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--border);
       border-radius: var(--rp);
       box-shadow: 0 8px 32px rgba(0, 0, 0, .4), inset 0 1px 0 rgba(255, 255, 255, .05);
-      transition: all .4s ease
+      transition: all .4s ease;
+      will-change: transform
     }
 
     nav.wide {
@@ -351,7 +355,8 @@
       letter-spacing: .04em;
       color: var(--p2);
       margin-bottom: 2rem;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       animation: fadeUp .7s .2s both
     }
 
@@ -522,7 +527,8 @@
       font-weight: 500;
       text-decoration: none;
       background: rgba(255, 255, 255, .04);
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       transition: all .3s ease
     }
 
@@ -549,7 +555,8 @@
       border: 1px solid var(--border);
       color: var(--muted);
       background: rgba(255, 255, 255, .03);
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       transition: all .3s cubic-bezier(.34, 1.56, .64, 1);
       cursor: default
     }
@@ -743,7 +750,9 @@
       cursor: default;
       border: 1px solid var(--border);
       background: var(--card);
-      backdrop-filter: blur(12px)
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      will-change: transform
     }
 
     .bc::before {
@@ -889,7 +898,8 @@
 
     .glass {
       background: rgba(255, 255, 255, .04);
-      backdrop-filter: blur(20px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: var(--rx);
       padding: 3rem;
@@ -1213,8 +1223,9 @@
       position: fixed;
       inset: 0;
       z-index: 700;
-      background: rgba(3, 3, 12, .8);
-      backdrop-filter: blur(14px);
+      background: rgba(3, 3, 12, .85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -2115,17 +2126,36 @@
     // ── STARS ──
     (() => {
       const c = document.getElementById('stars'), ctx = c.getContext('2d');
-      let W, H, stars = [];
-      const resize = () => { W = c.width = innerWidth; H = c.height = innerHeight; stars = Array.from({ length: 200 }, () => ({ x: Math.random() * W, y: Math.random() * H, r: Math.random() * 1.2 + .2, a: Math.random(), da: (Math.random() - .5) * .008 })) };
+      let W, H, stars = [], active = true;
+      const resize = () => {
+        W = c.width = innerWidth;
+        H = c.height = innerHeight;
+        stars = Array.from({ length: 150 }, () => ({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: Math.random() * 1.1 + .2,
+          a: Math.random(),
+          da: (Math.random() - .5) * .006
+        }))
+      };
       resize(); window.addEventListener('resize', resize);
+
+      // Stop animation when page is hidden
+      document.addEventListener('visibilitychange', () => { active = document.visibilityState === 'visible' });
+
       const draw = () => {
+        if (!active) { requestAnimationFrame(draw); return; }
         ctx.clearRect(0, 0, W, H);
+        ctx.fillStyle = 'rgba(180,180,255,0.8)';
         stars.forEach(s => {
-          s.a = Math.max(.05, Math.min(1, s.a + s.da));
-          if (s.a <= .05 || s.a >= 1) s.da *= -1;
+          s.a += s.da;
+          if (s.a <= 0.05 || s.a >= 1) s.da *= -1;
+          s.a = Math.max(0.05, Math.min(1, s.a));
+          ctx.globalAlpha = s.a;
           ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(180,180,255,${s.a})`; ctx.fill();
+          ctx.fill();
         });
+        ctx.globalAlpha = 1;
         requestAnimationFrame(draw);
       };
       draw();
@@ -2135,25 +2165,33 @@
     const cur = document.getElementById('cur'), ring = document.getElementById('cur-ring');
     let mx = 0, my = 0, rx = 0, ry = 0;
     const trail = [];
-    for (let i = 0; i < 8; i++) { const d = document.createElement('div'); d.className = 'trail'; document.body.appendChild(d); trail.push({ el: d, x: 0, y: 0 }) }
-    document.addEventListener('mousemove', e => {
-      mx = e.clientX; my = e.clientY;
-      cur.style.left = mx + 'px'; cur.style.top = my + 'px';
-    });
-    (function animCursor() {
-      rx += (mx - rx) * .12; ry += (my - ry) * .12;
-      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-      // trail
-      let tx = mx, ty = my;
-      trail.forEach((t, i) => {
-        t.x += (tx - t.x) * .35; t.y += (ty - t.y) * .35;
-        t.el.style.left = t.x + 'px'; t.el.style.top = t.y + 'px';
-        t.el.style.opacity = ((trail.length - i) / trail.length) * .35 + '';
-        t.el.style.width = t.el.style.height = (8 - i) + 'px';
-        tx = t.x; ty = t.y;
-      });
-      requestAnimationFrame(animCursor);
-    })();
+    const isMobile = 'ontouchstart' in window;
+
+    if (!isMobile) {
+      for (let i = 0; i < 6; i++) {
+        const d = document.createElement('div');
+        d.className = 'trail';
+        document.body.appendChild(d);
+        trail.push({ el: d, x: 0, y: 0 })
+      }
+      document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        cur.style.transform = `translate3d(${mx}px, ${my}px, 0) translate(-50%, -50%)`;
+      }, { passive: true });
+
+      (function animCursor() {
+        rx += (mx - rx) * .15; ry += (my - ry) * .15;
+        ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
+
+        let tx = mx, ty = my;
+        trail.forEach((t, i) => {
+          t.x += (tx - t.x) * .4; t.y += (ty - t.y) * .4;
+          t.el.style.transform = `translate3d(${t.x}px, ${t.y}px, 0) translate(-50%, -50%)`;
+          tx = t.x; ty = t.y;
+        });
+        requestAnimationFrame(animCursor);
+      })();
+    }
     document.querySelectorAll('a,button,.tc,.bc,.hchip,.tag,.ctr').forEach(el => {
       el.addEventListener('mouseenter', () => document.body.classList.add('ch'));
       el.addEventListener('mouseleave', () => document.body.classList.remove('ch'));
@@ -2190,7 +2228,7 @@
 
     // ── COUNTER ──
     const animCounter = (el) => {
-      const t = parseInt(el.dataset.target); if (!t) return;
+      const t = Number.parseInt(el.dataset.target); if (!t) return;
       let n = 0; const step = Math.ceil(t / 50);
       const ti = setInterval(() => { n = Math.min(n + step, t); el.textContent = n; if (n >= t) clearInterval(ti) }, 35);
     };
