@@ -1,5 +1,5 @@
 import { Easing, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
-import { C, DISPLAY } from '../theme';
+import { C, DISPLAY, MONO } from "../theme";
 
 // One tiny animated "lesson" per discipline. Each motif is a 520x520 SVG.
 const S = 520;
@@ -42,7 +42,7 @@ export const DesignMotif: React.FC<{ color: string }> = ({ color }) => {
         opacity={0.9}
         transform={`translate(0 ${(1 - pop(14)) * 200})`}
       />
-      <text x={30} y={S - 28} fill={C.muted} fontFamily={DISPLAY} fontSize={22} letterSpacing={4} opacity={pop(18)}>
+      <text x={30} y={S - 28} fill={C.muted} fontFamily={MONO} fontSize={22} letterSpacing={4} opacity={pop(18)}>
         Aa · 60/30/10
       </text>
     </svg>
@@ -73,7 +73,7 @@ export const MotionMotif: React.FC<{ color: string }> = ({ color }) => {
         const te = interpolate(tl, [0, 1], [0, 1], { easing: Easing.bezier(0.7, 0, 0.3, 1) });
         return <circle key={i} cx={x0 + (x1 - x0) * tl} cy={y0 - (y0 - y1) * te} r={26 - i * 6} fill={color} opacity={0.35 - i * 0.1} />;
       })}
-      <text x={x0} y={495} fill={C.muted} fontFamily={DISPLAY} fontSize={22} letterSpacing={4}>
+      <text x={x0} y={495} fill={C.muted} fontFamily={MONO} fontSize={22} letterSpacing={4}>
         ease-in-out
       </text>
     </svg>
@@ -110,7 +110,7 @@ export const EditMotif: React.FC<{ color: string }> = ({ color }) => {
       })}
       <line x1={head} y1={110} x2={head} y2={440} stroke={C.text} strokeWidth={4} />
       <polygon points={`${head - 14},100 ${head + 14},100 ${head},122`} fill={C.text} />
-      <text x={30} y={80} fill={C.muted} fontFamily={DISPLAY} fontSize={22} letterSpacing={4}>
+      <text x={30} y={80} fill={C.muted} fontFamily={MONO} fontSize={22} letterSpacing={4}>
         00:00:{String(Math.floor(interpolate(head, [40, 480], [0, 24]))).padStart(2, '0')}:12
       </text>
     </svg>
@@ -142,8 +142,8 @@ export const CineMotif: React.FC<{ color: string }> = ({ color }) => {
       <circle cx={sx} cy={sy} r={60} fill={color} opacity={0.9} />
       <circle cx={sx} cy={sy} r={90} fill="none" stroke={color} strokeWidth={3} opacity={0.5 * t} />
       <circle cx={70} cy={70} r={10} fill="#ef4444" opacity={rec ? 1 : 0.2} />
-      <text x={90} y={78} fill={C.text} fontFamily={DISPLAY} fontSize={20} letterSpacing={3}>REC</text>
-      <text x={330} y={470} fill={C.muted} fontFamily={DISPLAY} fontSize={20} letterSpacing={3}>35mm · f/1.8</text>
+      <text x={90} y={78} fill={C.text} fontFamily={MONO} fontSize={20} letterSpacing={3}>REC</text>
+      <text x={330} y={470} fill={C.muted} fontFamily={MONO} fontSize={20} letterSpacing={3}>35mm · f/1.8</text>
     </svg>
   );
 };
@@ -171,7 +171,7 @@ export const CameraMotif: React.FC<{ color: string }> = ({ color }) => {
           const y2 = 240 + Math.sin(a + 1.3) * (R + 4);
           const x3 = 260 + Math.cos(a) * (R + 4);
           const y3 = 240 + Math.sin(a) * (R + 4);
-          return <polygon key={i} points={`${x1},${y1} ${x2},${y2} ${x3},${y3}`} fill="#1a1a33" stroke={C.p2} strokeWidth={2} />;
+          return <polygon key={i} points={`${x1},${y1} ${x2},${y2} ${x3},${y3}`} fill="#1a1d3a" stroke={C.p2} strokeWidth={2} />;
         })}
       </g>
       <text x={260} y={500} textAnchor="middle" fill={C.text} fontFamily={DISPLAY} fontWeight={700} fontSize={38}>
@@ -195,14 +195,14 @@ export const CodeMotif: React.FC<{ color: string }> = ({ color }) => {
         const show = l.slice(0, Math.max(0, chars - used));
         used += l.length;
         return (
-          <text key={i} x={40} y={120 + i * 44} fill={i === 0 ? color : C.text} fontFamily="monospace" fontSize={24}>
+          <text key={i} x={40} y={120 + i * 44} fill={i === 0 ? color : C.text} fontFamily={MONO} fontSize={24}>
             {show}
           </text>
         );
       })}
       <rect x={40} y={110 + Math.min(3, Math.floor(chars / 12)) * 44} width={12} height={4} fill={C.text} opacity={frame % 10 < 5 ? 1 : 0} />
       {/* phone */}
-      <rect x={320} y={40} width={180} height={360} rx={30} fill="#0f0f22" stroke={C.text} strokeWidth={5} />
+      <rect x={320} y={40} width={180} height={360} rx={30} fill="#0d0f24" stroke={C.text} strokeWidth={5} />
       <rect x={385} y={52} width={50} height={8} rx={4} fill="rgba(255,255,255,.3)" />
       <rect x={340} y={86} width={140} height={70} rx={12} fill={color} transform={`scale(1 ${ui(14)})`} style={{ transformOrigin: '410px 86px' }} />
       <rect x={340} y={170} width={140} height={22} rx={8} fill="rgba(255,255,255,.25)" opacity={ui(18)} />

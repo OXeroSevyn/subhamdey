@@ -43,8 +43,11 @@ export function LoopPlayer<T extends Record<string, unknown>>({ component, input
         durationInFrames={frames}
         fps={30}
         loop
+        autoPlay={!reduceMotion}
+        numberOfSharedAudioTags={0}
+        initiallyMuted
         controls={controls}
-        initialFrame={reduceMotion ? stillFrame ?? Math.floor(frames / 2) : 0}
+        initialFrame={stillFrame ?? 0}
         clickToPlay={controls}
         doubleClickToFullscreen={controls}
         acknowledgeRemotionLicense

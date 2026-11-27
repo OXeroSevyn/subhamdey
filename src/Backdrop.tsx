@@ -17,8 +17,8 @@ const Blob: React.FC<{ color: string; size: number; x: number; y: number; r: num
         top: y + Math.sin(a) * r - size / 2,
         borderRadius: '50%',
         background: `radial-gradient(circle, ${color} 0%, transparent 65%)`,
-        opacity: 0.55,
-        filter: 'blur(40px)',
+        opacity: 0.5,
+        filter: 'blur(50px)',
       }}
     />
   );
@@ -44,7 +44,7 @@ export const Backdrop: React.FC = () => {
         }}
       />
       {/* vignette */}
-      <AbsoluteFill style={{ background: 'radial-gradient(ellipse at center, transparent 45%, rgba(5,5,16,.85) 100%)' }} />
+      <AbsoluteFill style={{ background: 'radial-gradient(ellipse at center, transparent 45%, rgba(5,6,15,.85) 100%)' }} />
     </AbsoluteFill>
   );
 };

@@ -1,115 +1,82 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
 import { HeroReel, REEL_DURATION } from '../HeroReel';
-import { HeroScene } from '../scenes/HeroScene';
 import { MotifLoop } from '../scenes/MotifLoop';
-import { Orbit } from '../scenes/Orbit';
 import { AboutBadge } from '../scenes/AboutBadge';
 import { StatsScene, type Stat } from '../scenes/StatsScene';
-import { ContactScene } from '../scenes/ContactScene';
 import { C } from '../theme';
 import { COURSES, type Course } from './courses';
 import { LoopPlayer, reduceMotion } from './LoopPlayer';
+import { DotField } from './DotField';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const EMAIL = 'subhamdey.one@gmail.com';
-const WORDS = COURSES.map((c) => c.title);
-
-// TODO(Subham): add real proof here when ready, e.g. { value: 250, label: 'Students taught', color: C.t }
+// TODO(Subham): add real proof when ready, e.g. { value: 250, label: 'Students taught', color: C.s }
 const STATS: Stat[] = [
-  { value: 6, label: 'Courses', color: C.p2 },
-  { value: 3, label: 'Worlds: design · film · code', color: C.s },
-  { value: 'Blend Mode', label: 'Studio on IG & YT', color: C.t },
+  { value: 6, label: 'Courses', color: '#d4ff3a' },
+  { value: 3, label: 'Design · Film · Code', color: C.p2 },
+  { value: 'Blend Mode', label: 'Studio on IG & YT', color: C.g2 },
+];
+const PRINCIPLES = [
+  ['Learn by making', 'Every class ends with something real: a poster, a cut, a shot list, an app on your phone.'],
+  ['Real tools, real briefs', 'The same software and workflow I use on client and studio work, not toy versions of it.'],
+  ['Find your voice', "Tools change every year. Taste and the way you see don't, so that's what we train."],
+  ['Ship it', 'Work goes out into the world: your feed, your portfolio, the Play Store. Feedback beats perfection.'],
 ];
 
-function useTypewriter() {
-  const [text, setText] = useState(reduceMotion ? WORDS.join(' · ') : '');
+// words → masked spans so they can rise into place
+const Split = ({ text, className }: { text: string; className?: string }) => (
+  <span className={className} aria-label={text}>
+    {text.split(' ').map((w, i) => (
+      <span className="w" key={i} aria-hidden="true"><span className="wi">{w}</span></span>
+    ))}
+  </span>
+);
+
+function Preloader({ onDone }: { onDone: () => void }) {
+  const [n, setN] = useState(reduceMotion ? 100 : 0);
+  const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (reduceMotion) return;
-    let wi = 0, ci = 0, del = false, t: number;
-    const tick = () => {
-      const w = WORDS[wi];
-      if (!del) {
-        setText(w.slice(0, ++ci));
-        if (ci === w.length) { del = true; t = window.setTimeout(tick, 1800); return; }
-      } else {
-        setText(w.slice(0, --ci));
-        if (ci === 0) { del = false; wi = (wi + 1) % WORDS.length; t = window.setTimeout(tick, 400); return; }
-      }
-      t = window.setTimeout(tick, del ? 55 : 85);
-    };
-    t = window.setTimeout(tick, 1200);
-    return () => clearTimeout(t);
-  }, []);
-  return text;
+    if (reduceMotion) { onDone(); return; }
+    const o = { v: 0 };
+    const tl = gsap.timeline();
+    tl.to(o, { v: 100, duration: 1.4, ease: 'power2.inOut', onUpdate: () => setN(Math.round(o.v)) })
+      .to(ref.current, { yPercent: -100, duration: 0.9, ease: 'expo.inOut' }, '+=0.1')
+      .add(onDone, '-=0.5');
+    return () => { tl.kill(); };
+  }, [onDone]);
+  return (
+    <div className="loader" ref={ref} aria-hidden="true">
+      <span className="mono">Subham Dey — Creative Educator</span>
+      <span className="count">{String(n).padStart(3, '0')}</span>
+    </div>
+  );
 }
 
-function useSiteEffects(setActive: (id: string) => void, setWide: (w: boolean) => void) {
+function CourseDialog({ course, onClose }: { course: Course; onClose: () => void }) {
+  const x = useRef<HTMLButtonElement>(null);
   useEffect(() => {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e, i) => {
-        if (e.isIntersecting) {
-          setTimeout(() => e.target.classList.add('visible'), i * 80);
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.07 });
-    document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach((el) => io.observe(el));
-    const onScroll = () => {
-      setWide(window.scrollY > 80);
-      let cur = '';
-      document.querySelectorAll<HTMLElement>('section[id]').forEach((s) => { if (window.scrollY >= s.offsetTop - 160) cur = s.id; });
-      setActive(cur);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => { io.disconnect(); window.removeEventListener('scroll', onScroll); };
-  }, [setActive, setWide]);
-}
-
-const NAV = [['reel', 'Reel'], ['skills', 'Skills'], ['about', 'About'], ['teach', 'Courses']] as const;
-
-function CourseModal({ course, onClose }: { course: Course | null; onClose: () => void }) {
-  const closeBtn = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    if (!course) return;
-    document.body.style.overflow = 'hidden';
-    closeBtn.current?.focus();
+    x.current?.focus();
     const key = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     document.addEventListener('keydown', key);
-    return () => { document.body.style.overflow = ''; document.removeEventListener('keydown', key); };
-  }, [course, onClose]);
-  if (!course) return <div className="modal-bd" />;
+    return () => document.removeEventListener('keydown', key);
+  }, [onClose]);
   return (
-    <div className="modal-bd open" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="mct">
-        <div className="modal-head">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div className="modal-iw" style={{ background: course.color + '22' }}><span>{course.icon}</span></div>
-            <div>
-              <div className="modal-cn">Course {course.num}</div>
-              <div className="modal-ct" id="mct">{course.title}</div>
-            </div>
-          </div>
-          <button className="modal-x" ref={closeBtn} onClick={onClose} aria-label="Close course details">✕</button>
-        </div>
-        <LoopPlayer className="modal-motif" component={MotifLoop} inputProps={{ kind: course.key, color: course.color }} width={520} height={520} frames={90} stillFrame={45} />
-        <div className="modal-body">
-          <div className="modal-tag" style={{ background: course.color + '22', color: course.color }}>{course.tag}</div>
-          <p className="modal-sum">{course.summary}</p>
-          <div className="m-block">
-            <div className="m-ttl">🛠 Tools &amp; Software</div>
-            <div className="m-chips">{course.tools.map((t) => <span className="m-chip" key={t}>{t}</span>)}</div>
-          </div>
-          <div className="m-block">
-            <div className="m-ttl">🎯 What You'll Learn</div>
-            <ul className="m-outs">{course.outcomes.map((o) => <li key={o}>{o}</li>)}</ul>
-          </div>
-          <div className="m-block">
-            <div className="m-ttl">👤 Who It's For</div>
-            <p className="modal-sum">{course.audience}</p>
-          </div>
-        </div>
-        <div className="modal-foot">
-          <a href={`mailto:${EMAIL}?subject=${encodeURIComponent(course.title + ' course')}`} className="m-btn">✉ Enroll / Enquire</a>
-          <button className="m-btn2" onClick={onClose}>Close</button>
+    <div className="dlg-bd" onClick={(e) => e.target === e.currentTarget && onClose()} data-lenis-prevent>
+      <div className="dlg" role="dialog" aria-modal="true" aria-labelledby="dlg-t" style={{ '--c': course.color } as React.CSSProperties}>
+        <button className="x" ref={x} onClick={onClose} aria-label="Close course details">✕</button>
+        <LoopPlayer className="art" component={MotifLoop} inputProps={{ kind: course.key, color: course.color }} width={520} height={520} frames={90} stillFrame={45} />
+        <div>
+          <span className="mono" style={{ color: course.color }}>Course {course.num} · {course.tag}</span>
+          <h3 id="dlg-t">{course.title}</h3>
+          <p className="big">{course.summary}</p>
+          <h4>Tools</h4><div className="chips">{course.tools.map((t) => <span className="chip" key={t}>{t}</span>)}</div>
+          <h4>You'll learn</h4><ul className="outs">{course.outcomes.map((o) => <li key={o}>{o}</li>)}</ul>
+          <h4>Who it's for</h4><p>{course.audience}</p>
+          <a className="btn" href={`mailto:${EMAIL}?subject=${encodeURIComponent(course.title + ' course')}`}><span>Enquire about {course.title}</span><i>→</i></a>
         </div>
       </div>
     </div>
@@ -117,212 +84,228 @@ function CourseModal({ course, onClose }: { course: Course | null; onClose: () =
 }
 
 export function App() {
-  const [active, setActive] = useState('');
-  const [wide, setWide] = useState(false);
+  const [ready, setReady] = useState(false);
   const [open, setOpen] = useState<Course | null>(null);
-  const lastCard = useRef<HTMLElement | null>(null);
-  const typed = useTypewriter();
-  useSiteEffects(setActive, setWide);
+  const [hover, setHover] = useState<Course | null>(null);
+  const last = useRef<HTMLElement | null>(null);
+  const root = useRef<HTMLDivElement>(null);
+  const preview = useRef<HTMLDivElement>(null);
+  const lenisRef = useRef<Lenis | null>(null);
 
-  const openCourse = (c: Course, el: HTMLElement) => { lastCard.current = el; setOpen(c); };
-  const close = () => { setOpen(null); lastCard.current?.focus(); };
+  // smooth scroll
+  useEffect(() => {
+    if (reduceMotion) return;
+    const lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
+    lenisRef.current = lenis;
+    lenis.on('scroll', ScrollTrigger.update);
+    const tick = (t: number) => lenis.raf(t * 1000);
+    gsap.ticker.add(tick);
+    gsap.ticker.lagSmoothing(0);
+    // anchor links glide
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement).closest('a[href^="#"]') as HTMLAnchorElement | null;
+      if (!a) return;
+      e.preventDefault();
+      lenis.scrollTo(a.getAttribute('href')!, { duration: 1.6 });
+    };
+    document.addEventListener('click', onClick);
+    return () => { gsap.ticker.remove(tick); lenis.destroy(); document.removeEventListener('click', onClick); };
+  }, []);
+
+  useEffect(() => {
+    if (open) lenisRef.current?.stop(); else lenisRef.current?.start();
+    document.body.style.overflow = open ? 'hidden' : '';
+  }, [open]);
+
+  // scroll choreography
+  useLayoutEffect(() => {
+    if (!ready || reduceMotion) return;
+    const ctx = gsap.context(() => {
+      gsap.from('.hero .wi', { yPercent: 110, rotate: 4, duration: 1.2, ease: 'expo.out', stagger: 0.06 });
+      gsap.from('.hero [data-fade]', { opacity: 0, y: 20, duration: 1, ease: 'power3.out', stagger: 0.08, delay: 0.5 });
+      gsap.to('.hero-inner', { yPercent: -18, opacity: 0.2, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+
+      gsap.utils.toArray<HTMLElement>('[data-split]').forEach((el) => {
+        gsap.from(el.querySelectorAll('.wi'), { yPercent: 110, duration: 1.1, ease: 'expo.out', stagger: 0.05, scrollTrigger: { trigger: el, start: 'top 85%' } });
+      });
+      gsap.utils.toArray<HTMLElement>('[data-rise]').forEach((el) => {
+        gsap.from(el, { y: 60, opacity: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 88%' } });
+      });
+
+      // showreel grows from a card to full-bleed while pinned
+      if (window.innerWidth > 760) gsap.fromTo('.reel-frame', { scale: 0.62, borderRadius: 40 }, {
+        scale: 1, borderRadius: 0, ease: 'none',
+        scrollTrigger: { trigger: '.reel', start: 'top top', end: '+=120%', scrub: true, pin: true },
+      });
+
+      // principles: horizontal track while pinned
+      const track = document.querySelector<HTMLElement>('.h-track');
+      if (track && window.innerWidth > 760) {
+        gsap.to(track, {
+          x: () => -(track.scrollWidth - window.innerWidth), ease: 'none',
+          scrollTrigger: { trigger: '.h-wrap', start: 'top top', end: () => `+=${track.scrollWidth - window.innerWidth}`, scrub: 0.6, pin: true, invalidateOnRefresh: true },
+        });
+      }
+
+      // course rows stagger in
+      gsap.from('.row', { y: 40, opacity: 0, duration: 1, ease: 'expo.out', stagger: 0.07, scrollTrigger: { trigger: '.rows', start: 'top 80%' } });
+
+      // progress ring
+      gsap.to('.prog circle.bar', { strokeDashoffset: 0, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: true } });
+    }, root);
+    return () => ctx.revert();
+  }, [ready]);
+
+  // hover preview follows the cursor
+  useEffect(() => {
+    if (!preview.current) return;
+    const xTo = gsap.quickTo(preview.current, 'x', { duration: 0.6, ease: 'power3' });
+    const yTo = gsap.quickTo(preview.current, 'y', { duration: 0.6, ease: 'power3' });
+    const move = (e: PointerEvent) => { xTo(e.clientX); yTo(e.clientY); };
+    window.addEventListener('pointermove', move, { passive: true });
+    return () => window.removeEventListener('pointermove', move);
+  }, []);
+
+  const close = () => { setOpen(null); last.current?.focus(); };
 
   return (
-    <>
-      <div id="aurora" aria-hidden="true">
-        <div className="aura aura1" /><div className="aura aura2" /><div className="aura aura3" /><div className="aura aura4" />
-      </div>
-      <div className="grid-overlay" aria-hidden="true" />
+    <div ref={root}>
+      {!ready && <Preloader onDone={() => setReady(true)} />}
 
-      <nav id="nav" className={wide ? 'wide' : ''}>
-        <a href="#hero" className="nav-brand" aria-label="Subham Dey, back to top">
-          <div className="nav-av">SD</div>
-          <span className="nav-name">Subham Dey</span>
-        </a>
-        <div className="nav-sep" />
-        <ul className="nav-links">
-          {NAV.map(([id, label]) => (
-            <li key={id}><a href={`#${id}`} className={active === id ? 'active' : ''}>{label}</a></li>
-          ))}
-          <li><a href="#contact" className="nav-cta">Contact</a></li>
-        </ul>
-      </nav>
+      <header className="bar">
+        <a href="#top" className="logo" aria-label="Subham Dey, back to top">SD<span>●</span></a>
+        <nav aria-label="Sections">
+          <a href="#reel">Reel</a><a href="#courses">Courses</a><a href="#about">About</a>
+        </nav>
+        <a href="#contact" className="btn sm"><span>Start a course</span><i>→</i></a>
+      </header>
 
-      <a href={`mailto:${EMAIL}`} className="fab" title="Email Subham" aria-label="Email Subham">✉</a>
+      <svg className="prog" viewBox="0 0 44 44" aria-hidden="true">
+        <circle cx="22" cy="22" r="19" className="bg" />
+        <circle cx="22" cy="22" r="19" className="bar" />
+      </svg>
 
-      {/* HERO: live Remotion backdrop behind HTML text */}
-      <section className="hero" id="hero">
-        <div className="hero-bg"><LoopPlayer className="cover-169" component={HeroScene} width={1920} height={1080} frames={360} stillFrame={60} /></div>
-        <div className="hero-badge"><span className="bdot" />Available for Courses &amp; Collabs — 2026</div>
-        <h1 className="hero-title">
-          <span className="l1">Hi, I'm</span>
-          <span className="l2">Subham Dey</span>
-        </h1>
-        <p className="hero-tw">I teach <span id="tw">{typed}</span></p>
-        <p className="hero-sub">Creative educator, designer &amp; filmmaker. I teach the <b>full visual stack</b> — from pixels and frames to motion and code — helping students find their creative voice.</p>
-        <div className="hero-btns">
-          <a href="#teach" className="btn-glow"><span>🎓 My Courses</span></a>
-          <a href="#reel" className="btn-outline">▶ Watch the Reel</a>
-        </div>
-        <div className="hero-chips">
-          {COURSES.map((c) => <span className="hchip" key={c.key}>{c.icon} {c.title}</span>)}
-        </div>
-      </section>
-
-      <div className="ticker" aria-hidden="true">
-        <div className="ticker-track">
-          {[0, 1].flatMap((r) => [...WORDS, 'Android Dev'].map((w) => (
-            <span key={r + w}><span>{w}</span><span className="td"> ✦ </span></span>
-          )))}
-        </div>
-      </div>
-
-      {/* SHOWREEL: the full Remotion composition, scrubbable */}
-      <section className="section" id="reel">
-        <div className="reveal">
-          <div className="eyebrow">▶ Showreel</div>
-          <h2 className="s-head">Six Crafts, <span className="acc">One Reel</span></h2>
-          <p className="s-sub">Fourteen seconds, every frame animated in code and rendered live in your browser. Scrub it, pause it, go fullscreen.</p>
-        </div>
-        <div className="reel-frame reveal">
-          <LoopPlayer
-            className="reel-player"
-            component={HeroReel}
-            width={1920}
-            height={1080}
-            frames={REEL_DURATION}
-            stillFrame={60}
-            controls
-            label="Showreel: Subham Dey introduces six disciplines, graphic design, motion graphics, video editing, cinematography, camera handling and vibe coding."
-          />
-        </div>
-        <div className="reel-meta">
-          <span><b>Built with</b> React + Remotion · plays live, no video file</span>
-          <span>Design · Motion · Code: <b>Subham Dey</b></span>
-        </div>
-      </section>
-
-      {/* SKILLS: each card runs its own motif composition */}
-      <section className="section" id="skills">
-        <div className="reveal">
-          <div className="eyebrow">⚡ Expertise</div>
-          <h2 className="s-head">What I <span className="acc">Create</span></h2>
-          <p className="s-sub">A multidisciplinary skill set spanning design, film, and technology — built through real-world practice.</p>
-        </div>
-        <div className="bento">
-          {COURSES.map((c, i) => (
-            <div className={`bc bc${i + 1} reveal`} key={c.key}>
-              <LoopPlayer className="bc-motif" component={MotifLoop} inputProps={{ kind: c.key, color: c.color }} width={520} height={520} frames={90} stillFrame={45} />
-              <span className="bc-num">{c.num}</span>
-              <div className="bc-tag">{c.skillTag}</div>
-              <div className="bc-title">{c.key === 'code' ? 'Vibe Coding — Android' : c.title}</div>
-              <div className="bc-desc">{c.skill}</div>
-            </div>
-          ))}
-          <div className="bc bc7 reveal">
-            <LoopPlayer className="bc-motif bc-orbit" component={Orbit} inputProps={{ radius: 330, size: 70 }} width={900} height={500} frames={300} stillFrame={20} />
-            <div className="bc-tag">Education</div>
-            <div className="bc-title">Teaching All 6</div>
-            <div className="bc-desc">Every skill is also a course. Scroll down to explore the full curriculum and start your creative journey.</div>
-          </div>
-        </div>
-      </section>
-
-      {/* ABOUT */}
-      <section className="section-full" id="about">
-        <div className="inner">
-          <div className="reveal">
-            <div className="eyebrow">👋 About Me</div>
-            <h2 className="s-head">The Person <span className="acc">Behind the Work</span></h2>
-          </div>
-          <div className="about-wrap">
-            <div className="glass reveal-l">
-              {/* TODO(Subham): drop a square photo at public/assets/subham.jpg and it shows over the animated badge */}
-              <div className="about-badge">
-                <LoopPlayer component={AboutBadge} width={600} height={600} frames={300} stillFrame={40} />
-                <img src="/assets/subham.jpg" alt="Portrait of Subham Dey" onError={(e) => e.currentTarget.remove()} />
-              </div>
-              <div className="glass-quote">"I don't just create —<br />I teach others <span className="hl">how to see.</span>"</div>
-              <p className="glass-body">I'm Subham Dey — a multidisciplinary creative professional and passionate educator from Siliguri, West Bengal. My work lives at the crossroads of design, film, and technology, and I bring that real-world experience into every class I teach.</p>
-            </div>
-            <div className="about-right reveal-r">
-              <LoopPlayer className="stats-player" component={StatsScene} inputProps={{ stats: STATS }} width={1200} height={380} frames={240} stillFrame={120}
-                label={STATS.map((s) => `${s.value} ${s.label}`).join(', ')} />
-              <p className="about-text">From crafting compelling <b>brand identities</b> to directing <b>cinematic sequences</b> and shipping <b>Android apps</b> — I bring genuine expertise to every subject I teach. My goal is to help students not just learn tools, but develop a real creative voice.</p>
-              <div className="tags">
-                {['🎨 Designer', '🎬 Filmmaker', '📱 Developer', '🎓 Educator', '📍 Siliguri, WB', '🇮🇳 India'].map((t) => <span className="tag" key={t}>{t}</span>)}
-              </div>
+      <main id="top">
+        <section className="hero">
+          <DotField />
+          <div className="hero-inner wrap">
+            <p className="mono" data-fade><span className="live" />Creative educator · Siliguri, India</p>
+            <h1>
+              <Split text="I teach people" />
+              <span className="line2"><Split text="how to" /><Split text="see." className="acc" /></span>
+            </h1>
+            <div className="hero-foot">
+              <p data-fade>Designer, filmmaker and developer teaching the full visual stack, from pixels and frames to motion and code.</p>
+              <ul className="for mono" data-fade>
+                <li>For beginners</li><li>Creators</li><li>Brands</li><li>Students</li>
+              </ul>
+              <a href="#courses" className="btn" data-fade><span>Explore the six courses</span><i>→</i></a>
             </div>
           </div>
-          <div className="principles">
-            {[
-              ['Learn by making', 'Every class ends with something real: a poster, a cut, a shot list, an app on your phone.'],
-              ['Real tools, real briefs', 'The same software and workflow I use on client and studio work, not toy versions of it.'],
-              ['Find your voice', "Tools change every year. Taste and the way you see don't, so that's what we train."],
-            ].map(([t, d], i) => (
-              <div className="pr reveal" key={t}>
-                <div className="pr-n">HOW I TEACH · 0{i + 1}</div>
-                <div className="pr-t">{t}</div>
-                <p className="pr-d">{d}</p>
-              </div>
+          <div className="scroll-cue mono" data-fade>Scroll</div>
+        </section>
+
+        <section className="strip">
+          <div className="wrap strip-in">
+            {[['06', 'Courses'], ['03', 'Worlds: design, film, code'], ['01', 'Studio: Blend Mode'], ['∞', 'Frames to learn from']].map(([n, l]) => (
+              <div key={l} data-rise><b>{n}</b><span className="mono">{l}</span></div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* COURSES */}
-      <section className="section" id="teach">
-        <div className="reveal">
-          <div className="eyebrow">🎓 Curriculum</div>
-          <h2 className="s-head">What I <span className="acc">Teach</span></h2>
-          <p className="s-sub">Six disciplines, one educator. Open any card to watch its motion lesson and see the full curriculum, tools, and outcomes.</p>
-        </div>
-        <div className="teach-grid">
-          {COURSES.map((c, i) => (
-            <div
-              key={c.key}
-              className={`tc tc${i + 1} reveal`}
-              role="button"
-              tabIndex={0}
-              aria-haspopup="dialog"
-              aria-label={`Open ${c.title} course details`}
-              onClick={(e) => openCourse(c, e.currentTarget)}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCourse(c, e.currentTarget); } }}
-            >
-              <span className="tc-num">Course {c.num}</span><span className="tc-ico">{c.icon}</span>
-              <div className="tc-name">{c.title}</div>
-              <p className="tc-desc">{c.short}</p><span className="tc-lbl">{c.label}</span>
+        <section className="reel" id="reel">
+          <div className="reel-frame">
+            <LoopPlayer component={HeroReel} width={1920} height={1080} frames={REEL_DURATION} stillFrame={60} controls
+              label="Showreel: Subham Dey introduces six disciplines, graphic design, motion graphics, video editing, cinematography, camera handling and vibe coding." />
+          </div>
+          <p className="reel-cap mono">Showreel — every frame drawn in code with Remotion</p>
+        </section>
+
+        <section className="block" id="courses">
+          <div className="wrap">
+            <div className="sec-head">
+              <span className="mono">( 02 ) Courses</span>
+              <h2 data-split><Split text="Six disciplines," /><Split text="one educator." className="acc" /></h2>
             </div>
-          ))}
-        </div>
-      </section>
+            <div className="rows" onPointerLeave={() => setHover(null)}>
+              {COURSES.map((c) => (
+                <button key={c.key} className="row" style={{ '--c': c.color } as React.CSSProperties}
+                  onPointerEnter={() => setHover(c)} onFocus={() => setHover(c)} onBlur={() => setHover(null)}
+                  onClick={(e) => { last.current = e.currentTarget; setOpen(c); }} aria-haspopup="dialog">
+                  <span className="mono n">{c.num}</span>
+                  <span className="t">{c.title}</span>
+                  <span className="mono tag">{c.label}</span>
+                  <span className="arr" aria-hidden="true">↗</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
 
-      {/* CONTACT: Remotion paper plane + sonar rings behind */}
-      <section className="section" id="contact">
-        <div className="contact-wrap reveal">
-          <div className="contact-bg"><LoopPlayer className="cover-169" component={ContactScene} width={1600} height={900} frames={300} stillFrame={70} /></div>
-          <div className="c-eye">✉ Get in Touch</div>
-          <h2 className="c-title">Ready to Learn<br />Together?</h2>
-          <p className="c-sub">Reach out for courses, collaborations, freelance projects, or just to say hi. Always happy to connect with fellow creatives.</p>
-          <a href={`mailto:${EMAIL}`} className="c-btn">✉ {EMAIL}</a>
-        </div>
-      </section>
+        <section className="h-wrap" aria-label="How I teach">
+          <div className="h-track">
+            <div className="h-intro">
+              <span className="mono">( 03 ) Method</span>
+              <h2 data-split><Split text="How I" /><Split text="teach." className="acc" /></h2>
+            </div>
+            {PRINCIPLES.map(([t, d], i) => (
+              <article className="panel" key={t}>
+                <span className="pn">0{i + 1}</span>
+                <h3>{t}</h3>
+                <p>{d}</p>
+              </article>
+            ))}
+          </div>
+        </section>
 
-      <footer>
-        <p>© 2026 Subham Dey — Creative Educator · Siliguri, WB</p>
-        <div className="fsocs">
-          {[
-            ['https://www.instagram.com/blendmodestudio', 'Instagram', 'Ig'],
-            ['https://www.youtube.com/@blendmodestudioofficial', 'YouTube', 'Yt'],
-            ['https://www.linkedin.com/in/subhamdeyone', 'LinkedIn', 'In'],
-            ['https://www.behance.net/subhamdey4', 'Behance', 'Bē'],
-          ].map(([href, label, short]) => (
-            <a key={label} href={href} target="_blank" rel="noopener" className="fsoc" aria-label={label}>{short}</a>
-          ))}
-        </div>
-      </footer>
+        <section className="block" id="about">
+          <div className="wrap about">
+            <div className="badge" data-rise>
+              {/* TODO(Subham): drop a square photo at public/assets/subham.jpg and it appears over the animated badge */}
+              <LoopPlayer component={AboutBadge} width={600} height={600} frames={300} stillFrame={40} />
+              <img src="/assets/subham.jpg" alt="Portrait of Subham Dey" onError={(e) => e.currentTarget.remove()} />
+            </div>
+            <div>
+              <span className="mono">( 04 ) About</span>
+              <h2 data-split><Split text="I don't just create." /><Split text="I teach others how to see." className="acc" /></h2>
+              <p className="bio" data-rise>I'm a multidisciplinary creative and educator from Siliguri, West Bengal. My work lives where design, film and technology meet: brand identities, cinematic sequences, Android apps. I bring that real-world practice into every class, so students learn more than tools. They build taste.</p>
+              <div data-rise>
+                <LoopPlayer className="stats" component={StatsScene} inputProps={{ stats: STATS }} width={1200} height={380} frames={240} stillFrame={120}
+                  label={STATS.map((s) => `${s.value} ${s.label}`).join(', ')} />
+              </div>
+            </div>
+          </div>
+        </section>
 
-      <CourseModal course={open} onClose={close} />
-    </>
+        <section className="cta" id="contact">
+          <div className="wrap">
+            <span className="mono">( 05 ) Contact</span>
+            <h2 data-split><Split text="Working on something" /><Split text="creative?" className="acc" /></h2>
+            <a className="mail" href={`mailto:${EMAIL}`} data-rise>{EMAIL}<i>↗</i></a>
+            <div className="cta-foot mono" data-rise>
+              <span>SLG · WB · IN — {new Intl.DateTimeFormat('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Kolkata' }).format(new Date())} IST</span>
+              <nav aria-label="Social">
+                {[
+                  ['https://www.instagram.com/blendmodestudio', 'Instagram'],
+                  ['https://www.youtube.com/@blendmodestudioofficial', 'YouTube'],
+                  ['https://www.linkedin.com/in/subhamdeyone', 'LinkedIn'],
+                  ['https://www.behance.net/subhamdey4', 'Behance'],
+                ].map(([href, l]) => <a key={l} href={href} target="_blank" rel="noopener">{l}</a>)}
+              </nav>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="wrap mono"><span>© 2026 Subham Dey</span><span>Built with Three.js, GSAP, Lenis &amp; Remotion</span></footer>
+
+      <div className={`preview ${hover && !open ? 'on' : ''}`} ref={preview} aria-hidden="true">
+        <div className="pv-in" style={{ '--c': hover?.color } as React.CSSProperties}>
+          {hover && <LoopPlayer key={hover.key} component={MotifLoop} inputProps={{ kind: hover.key, color: hover.color }} width={520} height={520} frames={90} stillFrame={20} />}
+        </div>
+      </div>
+
+      {open && <CourseDialog course={open} onClose={close} />}
+    </div>
   );
 }

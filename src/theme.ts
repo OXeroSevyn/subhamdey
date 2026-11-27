@@ -1,22 +1,26 @@
 import { loadFont } from '@remotion/fonts';
 import { staticFile } from 'remotion';
 
-// Same palette + type as index.html so the reel feels native to the site.
+// "Deep space" palette shared by the Remotion scenes and the site CSS (src/site/site.css).
 export const C = {
-  bg: '#050510',
-  p: '#6366f1',
-  p2: '#818cf8',
-  s: '#f97316',
-  t: '#06b6d4',
-  g1: '#a855f7',
-  g2: '#ec4899',
-  green: '#10b981',
-  text: '#f1f0ff',
-  muted: 'rgba(241,240,255,0.55)',
+  bg: '#05060f',
+  ink: '#05060f',
+  p: '#4361ee', // nebula blue
+  p2: '#7b8cff',
+  s: '#4cc9f0', // cyan
+  t: '#2ec4b6',
+  g1: '#9d4edd', // violet
+  g2: '#f72585', // magenta
+  green: '#38d39f',
+  text: '#eef0ff',
+  muted: 'rgba(238,240,255,0.6)',
+  line: 'rgba(238,240,255,0.16)',
 };
 
-// Fonts are vendored in public/fonts (variable woff2, latin subset) so renders work offline.
-export const DISPLAY = 'Unbounded';
-export const BODY = 'Plus Jakarta Sans';
-loadFont({ family: DISPLAY, url: staticFile('fonts/Unbounded.woff2'), weight: '200 900' });
-loadFont({ family: BODY, url: staticFile('fonts/PlusJakartaSans.woff2'), weight: '200 800' });
+// Fonts are vendored in public/fonts (latin subset) so renders work offline.
+export const DISPLAY = 'Space Grotesk';
+export const BODY = 'Space Grotesk';
+export const SERIF = 'Space Grotesk';
+export const MONO = 'JetBrains Mono';
+loadFont({ family: DISPLAY, url: staticFile('fonts/SpaceGrotesk.woff2'), weight: '300 700' });
+loadFont({ family: MONO, url: staticFile('fonts/JetBrainsMono.woff2'), weight: '400 700' });
