@@ -5,6 +5,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>Subham Dey — Creative Educator</title>
+  <meta name="description"
+    content="Subham Dey is a designer, filmmaker, developer and creative educator in Siliguri, India, teaching graphic design, motion graphics, video editing, cinematography, camera handling and vibe coding." />
+  <meta name="theme-color" content="#050510" />
+  <!-- TODO: once the final domain is set, make og:image / og:url absolute (e.g. https://YOUR-DOMAIN/assets/reel/hero-reel-poster.jpg) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Subham Dey — Creative Educator" />
+  <meta property="og:description" content="Design. Film. Code. Courses and collabs from a multidisciplinary creative in Siliguri, India." />
+  <meta property="og:image" content="/assets/reel/hero-reel-poster.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236366f1'/%3E%3Cstop offset='1' stop-color='%23f97316'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='Arial Black,Arial' font-weight='900' font-size='26' text-anchor='middle' fill='white'%3ESD%3C/text%3E%3C/svg%3E" />
+  <link rel="preload" as="image" href="assets/reel/hero-reel-poster.jpg" />
   <link
     href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap"
     rel="stylesheet" />
@@ -45,8 +57,19 @@
       background: var(--bg);
       color: var(--text);
       font-family: 'Plus Jakarta Sans', sans-serif;
-      overflow-x: hidden;
-      cursor: none
+      overflow-x: hidden
+    }
+
+    /* custom cursor only for precise pointers; touch + keyboard users keep the real one */
+    @media (hover: hover) and (pointer: fine) {
+      body.has-cur {
+        cursor: none
+      }
+    }
+
+    body:not(.has-cur) #cur,
+    body:not(.has-cur) #cur-ring {
+      display: none
     }
 
     ::-webkit-scrollbar {
@@ -1740,6 +1763,169 @@
       transform: translateX(0)
     }
 
+    /* ── SHOWREEL (rendered with Remotion, see /remotion) ── */
+    .reel-frame {
+      position: relative;
+      margin-top: 3rem;
+      border-radius: 28px;
+      padding: 10px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, .5), rgba(168, 85, 247, .25) 45%, rgba(249, 115, 22, .5));
+      box-shadow: 0 40px 120px -30px rgba(99, 102, 241, .55), 0 30px 80px -40px rgba(249, 115, 22, .5)
+    }
+
+    .reel-frame video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 20px;
+      background: var(--bg);
+      object-fit: cover
+    }
+
+    .reel-ctrl {
+      position: absolute;
+      right: 1.6rem;
+      bottom: 1.6rem;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .55rem 1rem;
+      border-radius: var(--rp);
+      border: 1px solid rgba(255, 255, 255, .2);
+      background: rgba(5, 5, 16, .6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: var(--text);
+      font: 600 .75rem 'Plus Jakarta Sans', sans-serif;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      cursor: pointer
+    }
+
+    .reel-ctrl:hover {
+      border-color: var(--s2)
+    }
+
+    .reel-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1.2rem;
+      font-size: .8rem;
+      color: var(--muted)
+    }
+
+    .reel-meta b {
+      color: var(--text);
+      font-weight: 600
+    }
+
+    /* ── ABOUT: photo + principles ── */
+    .about-photo {
+      position: relative;
+      width: 132px;
+      height: 132px;
+      border-radius: 32px;
+      margin-bottom: 1.8rem;
+      padding: 4px;
+      background: linear-gradient(135deg, var(--p), var(--g1), var(--s));
+      z-index: 1
+    }
+
+    .about-photo .ph-fallback,
+    .about-photo img {
+      width: 100%;
+      height: 100%;
+      border-radius: 28px;
+      object-fit: cover;
+      display: grid;
+      place-items: center;
+      background: var(--bg2);
+      font: 900 2.6rem 'Unbounded', sans-serif;
+      color: var(--text)
+    }
+
+    .about-photo img {
+      position: absolute;
+      inset: 4px;
+      width: calc(100% - 8px);
+      height: calc(100% - 8px)
+    }
+
+    .principles {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 3rem
+    }
+
+    .pr {
+      padding: 1.6rem;
+      border-radius: var(--rx);
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .03)
+    }
+
+    .pr-n {
+      font: 900 .7rem 'Unbounded', sans-serif;
+      letter-spacing: .15em;
+      color: var(--s2)
+    }
+
+    .pr-t {
+      font: 700 1.05rem 'Unbounded', sans-serif;
+      margin: .7rem 0 .5rem;
+      color: var(--text)
+    }
+
+    .pr-d {
+      font-size: .86rem;
+      line-height: 1.75;
+      color: var(--muted)
+    }
+
+    .ctr-n.word {
+      font-size: 1.15rem;
+      line-height: 2.2rem
+    }
+
+    /* ── FOCUS + A11Y ── */
+    a:focus-visible,
+    button:focus-visible,
+    .tc:focus-visible {
+      outline: 2px solid var(--s2);
+      outline-offset: 4px
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important
+      }
+
+      .reveal,
+      .reveal-l,
+      .reveal-r {
+        opacity: 1;
+        transform: none
+      }
+    }
+
     /* ── RESPONSIVE ── */
     @media(max-width:900px) {
       .bento {
@@ -1757,6 +1943,10 @@
       }
 
       .about-wrap {
+        grid-template-columns: 1fr
+      }
+
+      .principles {
         grid-template-columns: 1fr
       }
 
@@ -1805,6 +1995,21 @@
         padding: 4rem 1.5rem
       }
 
+      .reel-frame {
+        padding: 5px;
+        border-radius: 18px
+      }
+
+      .reel-frame video {
+        border-radius: 14px
+      }
+
+      .reel-ctrl {
+        right: .8rem;
+        bottom: .8rem;
+        padding: .4rem .75rem
+      }
+
       footer {
         flex-direction: column;
         gap: 1.2rem;
@@ -1846,12 +2051,13 @@
 
   <!-- NAV -->
   <nav id="nav">
-    <a href="#" class="nav-brand">
+    <a href="#hero" class="nav-brand" aria-label="Subham Dey, back to top">
       <div class="nav-av">SD</div>
       <span class="nav-name">Subham Dey</span>
     </a>
     <div class="nav-sep"></div>
     <ul class="nav-links">
+      <li><a href="#reel">Reel</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#teach">Courses</a></li>
@@ -1860,7 +2066,7 @@
   </nav>
 
   <!-- FAB -->
-  <a href="mailto:subhamdey.one@gmail.com" class="fab" title="Email Subham">✉</a>
+  <a href="mailto:subhamdey.one@gmail.com" class="fab" title="Email Subham" aria-label="Email Subham">✉</a>
 
   <!-- HERO -->
   <section class="hero" id="hero">
@@ -1874,7 +2080,7 @@
       and frames to motion and code — helping students find their creative voice.</p>
     <div class="hero-btns">
       <a href="#teach" class="btn-glow"><span>🎓 My Courses</span></a>
-      <a href="#contact" class="btn-outline">Get in Touch</a>
+      <a href="#reel" class="btn-outline">▶ Watch the Reel</a>
     </div>
     <div class="hero-chips">
       <span class="hchip">🎨 Graphic Design</span>
@@ -1911,6 +2117,28 @@
       <span>Android Dev</span><span class="td"> ✦ </span>
     </div>
   </div>
+
+  <!-- SHOWREEL: motion graphics built in code with Remotion (source in /remotion, rendered into /assets/reel) -->
+  <section class="section" id="reel">
+    <div class="reveal">
+      <div class="eyebrow">▶ Showreel</div>
+      <h2 class="s-head">Six Crafts, <span class="acc">One Reel</span></h2>
+      <p class="s-sub">Fourteen seconds, every frame animated in code. Each course gets its own little motion lesson,
+        from easing curves to aperture blades.</p>
+    </div>
+    <div class="reel-frame reveal">
+      <video id="reel-video" muted loop playsinline preload="metadata" poster="assets/reel/hero-reel-poster.jpg"
+        aria-label="Showreel: Subham Dey introduces six disciplines, graphic design, motion graphics, video editing, cinematography, camera handling and vibe coding.">
+        <source src="assets/reel/hero-reel.webm" type="video/webm" />
+        <source src="assets/reel/hero-reel.mp4" type="video/mp4" />
+      </video>
+      <button class="reel-ctrl" id="reel-ctrl" type="button" aria-pressed="false">▶ Play</button>
+    </div>
+    <div class="reel-meta">
+      <span><b>Built with</b> React + Remotion · rendered to video</span>
+      <span>Design · Motion · Code: <b>Subham Dey</b></span>
+    </div>
+  </section>
 
   <!-- SKILLS -->
   <section class="section" id="skills">
@@ -1971,7 +2199,7 @@
   </section>
 
   <!-- ABOUT -->
-  <div class="section-full" id="about">
+  <section class="section-full" id="about">
     <div class="inner">
       <div class="reveal">
         <div class="eyebrow">👋 About Me</div>
@@ -1980,24 +2208,33 @@
       <div class="about-wrap">
         <div class="glass reveal-l">
           <div class="glass-mono">SD</div>
+          <!-- TODO(Subham): drop a square photo at assets/subham.jpg and it replaces the SD badge automatically -->
+          <div class="about-photo">
+            <div class="ph-fallback" aria-hidden="true">SD</div>
+            <img src="assets/subham.jpg" alt="Portrait of Subham Dey" width="124" height="124" loading="lazy"
+              onerror="this.remove()" />
+          </div>
           <div class="glass-quote">"I don't just create —<br />I teach others <span class="hl">how to see.</span>"</div>
           <p class="glass-body">I'm Subham Dey — a multidisciplinary creative professional and passionate educator from
             Siliguri, West Bengal. My work lives at the crossroads of design, film, and technology, and I bring that
             real-world experience into every class I teach.</p>
         </div>
         <div class="about-right reveal-r">
+          <!-- TODO(Subham): swap in real proof when ready, e.g.
+               <div class="ctr"><div class="ctr-n" data-target="250">0</div><div class="ctr-l">Students taught</div></div>
+               <div class="ctr"><div class="ctr-n" data-target="8">0</div><div class="ctr-l">Years creating</div></div> -->
           <div class="counters">
             <div class="ctr">
               <div class="ctr-n" data-target="6">0</div>
-              <div class="ctr-l">Disciplines</div>
+              <div class="ctr-l">Courses</div>
             </div>
             <div class="ctr">
-              <div class="ctr-n">∞</div>
-              <div class="ctr-l">Ideas Shared</div>
+              <div class="ctr-n" data-target="3">0</div>
+              <div class="ctr-l">Worlds: Design · Film · Code</div>
             </div>
             <div class="ctr">
-              <div class="ctr-n" data-target="100">0</div>
-              <div class="ctr-l">% Passion</div>
+              <div class="ctr-n word">Blend Mode</div>
+              <div class="ctr-l">Studio on IG &amp; YT</div>
             </div>
           </div>
           <p class="about-text">From crafting compelling <b>brand identities</b> to directing <b>cinematic sequences</b>
@@ -2013,8 +2250,25 @@
           </div>
         </div>
       </div>
+      <div class="principles">
+        <div class="pr reveal">
+          <div class="pr-n">HOW I TEACH · 01</div>
+          <div class="pr-t">Learn by making</div>
+          <p class="pr-d">Every class ends with something real: a poster, a cut, a shot list, an app on your phone.</p>
+        </div>
+        <div class="pr reveal">
+          <div class="pr-n">HOW I TEACH · 02</div>
+          <div class="pr-t">Real tools, real briefs</div>
+          <p class="pr-d">The same software and workflow I use on client and studio work, not toy versions of it.</p>
+        </div>
+        <div class="pr reveal">
+          <div class="pr-n">HOW I TEACH · 03</div>
+          <div class="pr-t">Find your voice</div>
+          <p class="pr-d">Tools change every year. Taste and the way you see don't, so that's what we train.</p>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
   <!-- COURSES -->
   <section class="section" id="teach">
@@ -2025,32 +2279,32 @@
         outcomes.</p>
     </div>
     <div class="teach-grid">
-      <div class="tc tc1 reveal"><span class="tc-num">Course 01</span><span class="tc-ico">🎨</span>
+      <div class="tc tc1 reveal" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Open Graphic Design course details"><span class="tc-num">Course 01</span><span class="tc-ico">🎨</span>
         <div class="tc-name">Graphic Design</div>
         <p class="tc-desc">Typography, layout, color theory, logo design, and brand systems. Think visually and design
           with intention.</p><span class="tc-lbl">Design Thinking</span>
       </div>
-      <div class="tc tc2 reveal"><span class="tc-num">Course 02</span><span class="tc-ico">✨</span>
+      <div class="tc tc2 reveal" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Open Motion Graphics course details"><span class="tc-num">Course 02</span><span class="tc-ico">✨</span>
         <div class="tc-name">Motion Graphics</div>
         <p class="tc-desc">Keyframing, animation principles, kinetic typography, and motion design using After Effects
           and industry tools.</p><span class="tc-lbl">After Effects</span>
       </div>
-      <div class="tc tc3 reveal"><span class="tc-num">Course 03</span><span class="tc-ico">🎬</span>
+      <div class="tc tc3 reveal" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Open Video Editing course details"><span class="tc-num">Course 03</span><span class="tc-ico">🎬</span>
         <div class="tc-name">Video Editing</div>
         <p class="tc-desc">Cuts, transitions, color grading, audio sync, and narrative pacing — shaping footage into
           professional stories.</p><span class="tc-lbl">Premiere / DaVinci</span>
       </div>
-      <div class="tc tc4 reveal"><span class="tc-num">Course 04</span><span class="tc-ico">🎥</span>
+      <div class="tc tc4 reveal" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Open Cinematography course details"><span class="tc-num">Course 04</span><span class="tc-ico">🎥</span>
         <div class="tc-name">Cinematography</div>
         <p class="tc-desc">Composition, lighting, shot language, and visual storytelling. Learn to see like a director
           of photography.</p><span class="tc-lbl">Visual Storytelling</span>
       </div>
-      <div class="tc tc5 reveal"><span class="tc-num">Course 05</span><span class="tc-ico">📷</span>
+      <div class="tc tc5 reveal" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Open Camera Handling course details"><span class="tc-num">Course 05</span><span class="tc-ico">📷</span>
         <div class="tc-name">Camera Handling</div>
         <p class="tc-desc">Exposure, focus, white balance, and full manual technique across DSLR, mirrorless, and cinema
           cameras.</p><span class="tc-lbl">DSLR &amp; Mirrorless</span>
       </div>
-      <div class="tc tc6 reveal"><span class="tc-num">Course 06</span><span class="tc-ico">📱</span>
+      <div class="tc tc6 reveal" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Open Vibe Coding course details"><span class="tc-num">Course 06</span><span class="tc-ico">📱</span>
         <div class="tc-name">Vibe Coding</div>
         <p class="tc-desc">Android App Development with a creative-first mindset. Build real, functional apps — no CS
           degree needed.</p><span class="tc-lbl">Android Dev</span>
@@ -2079,16 +2333,16 @@
   <footer>
     <p>© 2026 Subham Dey — Creative Educator · Siliguri, WB</p>
     <div class="fsocs">
-      <a href="https://www.instagram.com/blendmodestudio" target="_blank" class="fsoc">Ig</a>
-      <a href="https://www.youtube.com/@blendmodestudioofficial" target="_blank" class="fsoc">Yt</a>
-      <a href="https://www.linkedin.com/in/subhamdeyone" target="_blank" class="fsoc">In</a>
-      <a href="https://www.behance.net/subhamdey4" target="_blank" class="fsoc">Bē</a>
+      <a href="https://www.instagram.com/blendmodestudio" target="_blank" rel="noopener" class="fsoc" aria-label="Instagram">Ig</a>
+      <a href="https://www.youtube.com/@blendmodestudioofficial" target="_blank" rel="noopener" class="fsoc" aria-label="YouTube">Yt</a>
+      <a href="https://www.linkedin.com/in/subhamdeyone" target="_blank" rel="noopener" class="fsoc" aria-label="LinkedIn">In</a>
+      <a href="https://www.behance.net/subhamdey4" target="_blank" rel="noopener" class="fsoc" aria-label="Behance">Bē</a>
     </div>
   </footer>
 
   <!-- MODAL -->
   <div class="modal-bd" id="mbd">
-    <div class="modal" id="modal">
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mct">
       <div class="modal-head">
         <div style="display:flex;align-items:center;gap:1rem">
           <div class="modal-iw" id="miw"><span id="mico"></span></div>
@@ -2097,7 +2351,7 @@
             <div class="modal-ct" id="mct"></div>
           </div>
         </div>
-        <button class="modal-x" id="mx">✕</button>
+        <button class="modal-x" id="mx" aria-label="Close course details">✕</button>
       </div>
       <div class="modal-body">
         <div class="modal-tag" id="mtag"></div>
@@ -2123,6 +2377,8 @@
   </div>
 
   <script>
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // ── STARS ──
     (() => {
       const c = document.getElementById('stars'), ctx = c.getContext('2d');
@@ -2156,7 +2412,7 @@
           ctx.fill();
         });
         ctx.globalAlpha = 1;
-        requestAnimationFrame(draw);
+        if (!reduceMotion) requestAnimationFrame(draw);
       };
       draw();
     })();
@@ -2165,9 +2421,10 @@
     const cur = document.getElementById('cur'), ring = document.getElementById('cur-ring');
     let mx = 0, my = 0, rx = 0, ry = 0;
     const trail = [];
-    const isMobile = 'ontouchstart' in window;
+    const fancyCursor = matchMedia('(hover: hover) and (pointer: fine)').matches && !reduceMotion;
 
-    if (!isMobile) {
+    if (fancyCursor) {
+      document.body.classList.add('has-cur');
       for (let i = 0; i < 6; i++) {
         const d = document.createElement('div');
         d.className = 'trail';
@@ -2198,7 +2455,7 @@
     });
 
     // ── TILT ON CARDS ──
-    document.querySelectorAll('.tc,.bc,.glass,.ctr').forEach(card => {
+    if (fancyCursor) document.querySelectorAll('.tc,.bc,.glass,.ctr').forEach(card => {
       card.addEventListener('mousemove', e => {
         const r = card.getBoundingClientRect();
         const x = ((e.clientX - r.left) / r.width - .5) * 14;
@@ -2218,7 +2475,27 @@
       else { tw.textContent = w.slice(0, --ci); if (ci === 0) { del = false; wi = (wi + 1) % words.length; setTimeout(type, 400); return } }
       setTimeout(type, del ? 55 : 85);
     };
-    setTimeout(type, 1200);
+    if (reduceMotion) tw.textContent = words.join(' · '); else setTimeout(type, 1200);
+
+    // ── SHOWREEL ── autoplays (muted) only while on screen; never autoplays for reduced-motion visitors
+    (() => {
+      const v = document.getElementById('reel-video'), btn = document.getElementById('reel-ctrl');
+      let userPaused = reduceMotion;
+      const sync = () => {
+        const playing = !v.paused;
+        btn.textContent = playing ? '❚❚ Pause' : '▶ Play';
+        btn.setAttribute('aria-pressed', String(playing));
+      };
+      v.addEventListener('play', sync); v.addEventListener('pause', sync);
+      btn.addEventListener('click', () => {
+        if (v.paused) { userPaused = false; v.play().catch(() => { }); }
+        else { userPaused = true; v.pause(); }
+      });
+      new IntersectionObserver(([e]) => {
+        if (e.isIntersecting && !userPaused) v.play().catch(() => { });
+        else if (!e.isIntersecting) v.pause();
+      }, { threshold: .35 }).observe(v);
+    })();
 
     // ── NAV ──
     const nav = document.getElementById('nav');
@@ -2317,10 +2594,18 @@
       mbd.classList.add('open'); document.body.style.overflow = 'hidden';
       document.getElementById('modal').scrollTop = 0;
     };
-    const closeModal = () => { mbd.classList.remove('open'); document.body.style.overflow = ''; };
+    let lastFocus = null;
+    const closeModal = () => {
+      if (!mbd.classList.contains('open')) return;
+      mbd.classList.remove('open'); document.body.style.overflow = '';
+      if (lastFocus) lastFocus.focus();
+    };
     document.querySelectorAll('.tc').forEach(card => {
       const cls = Array.from(card.classList).find(c => /^tc\d$/.test(c));
-      if (cls) card.addEventListener('click', () => openModal(cls));
+      if (!cls) return;
+      const open = () => { lastFocus = card; openModal(cls); document.getElementById('mx').focus(); };
+      card.addEventListener('click', open);
+      card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
     });
     document.getElementById('mx').addEventListener('click', closeModal);
     document.getElementById('mx2').addEventListener('click', closeModal);
