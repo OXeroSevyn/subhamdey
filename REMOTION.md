@@ -1,7 +1,7 @@
 # Hero reel (Remotion)
 
 Motion graphics for the site's Showreel section, written in React with [Remotion](https://www.remotion.dev).
-The site itself stays a static `index.html`; this folder only produces the files in `../assets/reel/`.
+The site itself stays a static `index.html`; this folder only produces the files in `public/assets/reel/`.
 Vercel ignores this folder (see `../.vercelignore`).
 
 ```bash
