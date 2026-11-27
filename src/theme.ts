@@ -1,14 +1,14 @@
 import { loadFont } from '@remotion/fonts';
 import { staticFile } from 'remotion';
 
-// "Studio paper" palette: warm paper, ink, one hot signal orange and a cobalt blue.
+// "Studio paper" palette: warm paper, ink, one hot ocean blue and a cobalt blue.
 // The site CSS (src/site/site.css) uses the same tokens.
 export const C = {
   bg: '#f3efe6',
   ink: '#121212',
-  p: '#2b4dff', // cobalt
-  p2: '#2b4dff',
-  s: '#ff4d1c', // signal orange
+  p: '#023e8a', // deep navy
+  p2: '#023e8a',
+  s: '#0077b6', // ocean blue
   t: '#0f9e9e',
   g1: '#7b3cff',
   g2: '#ff3d8b',
