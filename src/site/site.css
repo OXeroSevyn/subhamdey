@@ -261,3 +261,10 @@ footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1r
 
 @media (max-width: 1000px) { .cards, .who { grid-template-columns: 1fr 1fr } .studio, .faq { grid-template-columns: 1fr } }
 @media (max-width: 620px) { .cards, .who { grid-template-columns: 1fr } .mesh i { filter: blur(60px) } }
+
+/* method panel animations */
+.pan-art { position: absolute; left: clamp(1rem, 3vw, 2.4rem); right: clamp(1rem, 3vw, 2.4rem); top: 26%; aspect-ratio: 4 / 3; max-height: 40%; margin: 0 auto }
+.pan-art > div { width: 100%; height: 100% }
+.panel p { overflow-wrap: break-word }
+.h-track > .panel:last-child { margin-right: var(--gut) }
+@media (max-width: 760px) { .pan-art { position: static; max-height: none; width: 100%; max-width: 380px; margin: 0 } }

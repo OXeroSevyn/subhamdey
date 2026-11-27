@@ -10,6 +10,7 @@ import { C } from '../theme';
 import { COURSES, type Course } from './courses';
 import { LoopPlayer, reduceMotion } from './LoopPlayer';
 import { DotField } from './DotField';
+import { METHOD_SCENES } from '../scenes/MethodScenes';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -158,8 +159,8 @@ export function App() {
       const track = document.querySelector<HTMLElement>('.h-track');
       if (track && window.innerWidth > 760) {
         gsap.to(track, {
-          x: () => -(track.scrollWidth - window.innerWidth), ease: 'none',
-          scrollTrigger: { trigger: '.h-wrap', start: 'top top', end: () => `+=${track.scrollWidth - window.innerWidth}`, scrub: 0.6, pin: true, invalidateOnRefresh: true },
+          x: () => -(track.scrollWidth - document.documentElement.clientWidth), ease: 'none',
+          scrollTrigger: { trigger: '.h-wrap', start: 'top top', end: () => `+=${track.scrollWidth - document.documentElement.clientWidth}`, scrub: 0.6, pin: true, invalidateOnRefresh: true },
         });
       }
 
@@ -283,6 +284,7 @@ export function App() {
             {PRINCIPLES.map(([t, d], i) => (
               <article className="panel" key={t}>
                 <span className="pn">0{i + 1}</span>
+                <div className="pan-art"><LoopPlayer component={METHOD_SCENES[i]} width={480} height={360} frames={150} stillFrame={120} /></div>
                 <h3>{t}</h3>
                 <p>{d}</p>
               </article>
