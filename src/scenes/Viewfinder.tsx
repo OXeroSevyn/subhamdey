@@ -28,7 +28,7 @@ const Take: React.FC<{ i: number }> = ({ i }) => {
           <Motif color={t.color} />
         </div>
       </AbsoluteFill>
-      <div style={{ position: 'absolute', left: 70, bottom: 120, fontFamily: SERIF, fontStyle: 'italic', fontSize: 110, color: C.ink, lineHeight: 1, opacity: out }}>
+      <div style={{ position: 'absolute', left: 70, bottom: 120, fontFamily: SERIF, fontStyle: 'italic', fontSize: 110, color: C.text, lineHeight: 1, opacity: out }}>
         {t.label}
       </div>
       <div style={{ position: 'absolute', left: 74, bottom: 250, fontFamily: MONO, fontSize: 30, color: t.color, letterSpacing: 4 }}>
@@ -45,7 +45,7 @@ export const Viewfinder: React.FC = () => {
   const secs = Math.floor(frame / fps);
   const ff = String(frame % fps).padStart(2, '0');
   const corner = (x: number, y: number, dx: number, dy: number) => (
-    <path d={`M ${x} ${y + dy * 90} L ${x} ${y} L ${x + dx * 90} ${y}`} stroke={C.ink} strokeWidth={8} fill="none" />
+    <path d={`M ${x} ${y + dy * 90} L ${x} ${y} L ${x + dx * 90} ${y}`} stroke={C.text} strokeWidth={8} fill="none" />
   );
   return (
     <AbsoluteFill style={{ background: C.bg }}>
@@ -62,11 +62,11 @@ export const Viewfinder: React.FC = () => {
         <line x1={width / 2 - 30} y1={height / 2} x2={width / 2 + 30} y2={height / 2} stroke={C.line} strokeWidth={3} />
         <line x1={width / 2} y1={height / 2 - 30} x2={width / 2} y2={height / 2 + 30} stroke={C.line} strokeWidth={3} />
       </svg>
-      <div style={{ position: 'absolute', top: 80, left: 90, display: 'flex', alignItems: 'center', gap: 16, fontFamily: MONO, fontSize: 30, color: C.ink, letterSpacing: 3 }}>
+      <div style={{ position: 'absolute', top: 80, left: 90, display: 'flex', alignItems: 'center', gap: 16, fontFamily: MONO, fontSize: 30, color: C.text, letterSpacing: 3 }}>
         <div style={{ width: 22, height: 22, borderRadius: 11, background: C.s, opacity: Math.floor(frame / 10) % 2 ? 0.25 : 1 }} />
         REC
       </div>
-      <div style={{ position: 'absolute', top: 80, right: 90, fontFamily: MONO, fontSize: 30, color: C.ink, letterSpacing: 3 }}>
+      <div style={{ position: 'absolute', top: 80, right: 90, fontFamily: MONO, fontSize: 30, color: C.text, letterSpacing: 3 }}>
         00:00:{String(secs).padStart(2, '0')}:{ff}
       </div>
       <div style={{ position: 'absolute', bottom: 70, right: 90, fontFamily: MONO, fontSize: 24, color: C.muted, letterSpacing: 3 }}>ISO 400 · 1/50 · 4K</div>

@@ -26,7 +26,7 @@ export const Orbit: React.FC<{ radius: number; size: number; labels?: boolean; t
           width: radius * 2,
           height: radius * 2 * tilt,
           borderRadius: '50%',
-          border: '2px solid rgba(18,18,18,.12)',
+          border: '2px solid rgba(255,255,255,.12)',
         }}
       />
       {SIX.map((d, i) => {

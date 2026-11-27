@@ -12,9 +12,11 @@
   "dependencies": {
     "@remotion/fonts": "4.0.547",
     "@remotion/player": "4.0.547",
+    "@types/three": "^0.170.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "remotion": "4.0.547"
+    "remotion": "4.0.547",
+    "three": "^0.170.0"
   },
   "devDependencies": {
     "@remotion/cli": "4.0.547",

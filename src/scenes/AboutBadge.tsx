@@ -31,7 +31,7 @@ export const AboutBadge: React.FC = () => {
         <defs>
           <path id="ring" d="M300,300 m-232,0 a232,232 0 1,1 464,0 a232,232 0 1,1 -464,0" />
         </defs>
-        <text fill={C.ink} fontFamily={MONO} fontSize={22} letterSpacing={6}>
+        <text fill={C.muted} fontFamily={MONO} fontSize={22} letterSpacing={6}>
           <textPath href="#ring">{ROLES.map((r) => `${r}  ✦  `).join('')}</textPath>
         </text>
       </svg>
@@ -43,13 +43,13 @@ export const AboutBadge: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: C.ink,
+          background: `linear-gradient(135deg, ${C.p}, ${C.g1} 55%, ${C.g2})`,
           transform: `scale(${pop}) rotate(${(1 - pop) * -30}deg)`,
-          boxShadow: `18px 18px 0 ${C.s}`,
+          boxShadow: `0 30px 100px -10px ${C.g1}`,
           fontFamily: DISPLAY,
           fontWeight: 700,
           fontSize: 130,
-          color: C.bg,
+          color: '#fff',
           letterSpacing: -4,
         }}
       >

@@ -35,7 +35,7 @@ const KineticWord: React.FC<{ text: string; size: number; delay?: number; gradie
               transform: `translateY(${(1 - p) * size * 0.9}px) rotate(${(1 - p) * 12}deg)`,
               opacity: Math.min(1, p * 1.4),
               ...(gradient
-                ? { color: C.s }
+                ? { background: `linear-gradient(120deg, ${C.p2}, ${C.g1} 45%, ${C.s})`, WebkitBackgroundClip: 'text', color: 'transparent' }
                 : { color: C.text }),
             }}
           >
@@ -57,7 +57,7 @@ const Intro: React.FC = () => {
         Hi, I'm
       </div>
       <KineticWord text="Subham Dey" size={210} delay={4} gradient />
-      <div style={{ height: 6, width: 900 * line, marginTop: 40, borderRadius: 6, background: C.ink }} />
+      <div style={{ height: 6, width: 900 * line, marginTop: 40, borderRadius: 6, background: `linear-gradient(90deg, ${C.p}, ${C.s})` }} />
       <div style={{ fontFamily: DISPLAY, fontWeight: 400, fontSize: 40, color: C.text, marginTop: 34, opacity: line, letterSpacing: 2 }}>
         Creative Educator · Siliguri, India
       </div>
@@ -105,8 +105,8 @@ const DisciplineBeat: React.FC<(typeof DISCIPLINES)[number]> = ({ n, name, tag, 
           height: 600,
           flexShrink: 0,
           borderRadius: 40,
-          background: 'rgba(18,18,18,.04)',
-          border: '1.5px solid rgba(18,18,18,.1)',
+          background: 'rgba(255,255,255,.04)',
+          border: '1.5px solid rgba(255,255,255,.1)',
           boxShadow: `0 40px 120px -30px ${color}`,
           display: 'flex',
           alignItems: 'center',
@@ -129,7 +129,7 @@ const Rail: React.FC = () => {
   return (
     <div style={{ position: 'absolute', bottom: 70, left: 150, display: 'flex', gap: 14, opacity: vis }}>
       {DISCIPLINES.map((d, i) => (
-        <div key={i} style={{ width: i === active ? 70 : 16, height: 16, borderRadius: 8, background: i <= active ? d.color : 'rgba(18,18,18,.2)' }} />
+        <div key={i} style={{ width: i === active ? 70 : 16, height: 16, borderRadius: 8, background: i <= active ? d.color : 'rgba(255,255,255,.2)' }} />
       ))}
     </div>
   );
@@ -153,7 +153,7 @@ const Outro: React.FC = () => {
                 fontFamily: DISPLAY,
                 fontWeight: 700,
                 fontSize: 130,
-                color: [C.ink, C.s, C.p][i],
+                color: [C.p2, C.g1, C.s][i],
                 transform: `scale(${p}) translateY(${(1 - p) * 60}px)`,
                 opacity: p,
               }}
@@ -174,7 +174,7 @@ const Outro: React.FC = () => {
           transform: `translateY(${(1 - tagline) * 40}px)`,
         }}
       >
-        I teach others <span style={{ color: C.s, fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400, fontSize: 84 }}>how to see.</span>
+        I teach others <span style={{ color: C.s, fontWeight: 700 }}>how to see.</span>
       </div>
     </AbsoluteFill>
   );

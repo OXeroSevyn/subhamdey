@@ -19,8 +19,8 @@ export const StatsScene: React.FC<{ stats: Stat[] }> = ({ stats }) => {
             style={{
               flex: 1,
               borderRadius: 0,
-              background: 'rgba(18,18,18,.045)',
-              border: '2px solid rgba(18,18,18,.09)',
+              background: 'rgba(255,255,255,.045)',
+              border: '2px solid rgba(255,255,255,.09)',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',

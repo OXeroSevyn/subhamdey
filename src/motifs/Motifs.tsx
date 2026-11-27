@@ -19,7 +19,7 @@ export const DesignMotif: React.FC<{ color: string }> = ({ color }) => {
   return (
     <svg width={S} height={S} viewBox="0 0 520 520">
       {[1, 2].map((i) => (
-        <g key={i} stroke="rgba(18,18,18,.18)" strokeWidth={2}>
+        <g key={i} stroke="rgba(255,255,255,.18)" strokeWidth={2}>
           <line x1={(S / 3) * i} y1={0} x2={(S / 3) * i} y2={S * gridDraw} />
           <line x1={0} y1={(S / 3) * i} x2={S * gridDraw} y2={(S / 3) * i} />
         </g>
@@ -59,7 +59,7 @@ export const MotionMotif: React.FC<{ color: string }> = ({ color }) => {
   const len = 560;
   return (
     <svg width={S} height={S} viewBox="0 0 520 520">
-      <rect x={x0} y={y1} width={x1 - x0} height={y0 - y1} fill="none" stroke="rgba(18,18,18,.12)" strokeWidth={2} />
+      <rect x={x0} y={y1} width={x1 - x0} height={y0 - y1} fill="none" stroke="rgba(255,255,255,.12)" strokeWidth={2} />
       <path d={path} fill="none" stroke={color} strokeWidth={8} strokeLinecap="round" strokeDasharray={len} strokeDashoffset={len * (1 - lin)} />
       {/* bezier handles */}
       <line x1={x0} y1={y0} x2={x0 + 280} y2={y0} stroke={C.s} strokeWidth={3} opacity={0.8} />
@@ -95,7 +95,7 @@ export const EditMotif: React.FC<{ color: string }> = ({ color }) => {
   return (
     <svg width={S} height={S} viewBox="0 0 520 520">
       {[0, 1, 2].map((tr) => (
-        <rect key={tr} x={30} y={150 + tr * 95} width={460} height={78} rx={10} fill="rgba(18,18,18,.04)" />
+        <rect key={tr} x={30} y={150 + tr * 95} width={460} height={78} rx={10} fill="rgba(255,255,255,.04)" />
       ))}
       {clips.map((c, i) => {
         const p = spring({ frame: frame - i * 2.5, fps, config: { damping: 14 } });
@@ -134,7 +134,7 @@ export const CineMotif: React.FC<{ color: string }> = ({ color }) => {
       {corner(30, 490, 1, -1)}
       {corner(490, 490, -1, -1)}
       {[1, 2].map((i) => (
-        <g key={i} stroke="rgba(18,18,18,.22)" strokeWidth={2} strokeDasharray="8 10">
+        <g key={i} stroke="rgba(255,255,255,.22)" strokeWidth={2} strokeDasharray="8 10">
           <line x1={(S / 3) * i} y1={30} x2={(S / 3) * i} y2={490} />
           <line x1={30} y1={(S / 3) * i} x2={490} y2={(S / 3) * i} />
         </g>
@@ -158,7 +158,7 @@ export const CameraMotif: React.FC<{ color: string }> = ({ color }) => {
   const stop = stops[Math.round(interpolate(open, [0.25, 1], [6, 0]))];
   return (
     <svg width={S} height={S} viewBox="0 0 520 520">
-      <circle cx={260} cy={240} r={R + 26} fill="none" stroke="rgba(18,18,18,.18)" strokeWidth={4} />
+      <circle cx={260} cy={240} r={R + 26} fill="none" stroke="rgba(255,255,255,.18)" strokeWidth={4} />
       <circle cx={260} cy={240} r={R} fill={color} opacity={0.25} />
       <g transform={`rotate(${frame * 1.5} 260 240)`}>
         {Array.from({ length: blades }).map((_, i) => {
@@ -171,7 +171,7 @@ export const CameraMotif: React.FC<{ color: string }> = ({ color }) => {
           const y2 = 240 + Math.sin(a + 1.3) * (R + 4);
           const x3 = 260 + Math.cos(a) * (R + 4);
           const y3 = 240 + Math.sin(a) * (R + 4);
-          return <polygon key={i} points={`${x1},${y1} ${x2},${y2} ${x3},${y3}`} fill="#ebe5d8" stroke={C.ink} strokeWidth={2} />;
+          return <polygon key={i} points={`${x1},${y1} ${x2},${y2} ${x3},${y3}`} fill="#1a1d3a" stroke={C.p2} strokeWidth={2} />;
         })}
       </g>
       <text x={260} y={500} textAnchor="middle" fill={C.text} fontFamily={DISPLAY} fontWeight={700} fontSize={38}>
@@ -190,7 +190,7 @@ export const CodeMotif: React.FC<{ color: string }> = ({ color }) => {
   const ui = (d: number) => spring({ frame: frame - d, fps, config: { damping: 13 } });
   return (
     <svg width={S} height={S} viewBox="0 0 520 520">
-      <rect x={20} y={60} width={270} height={400} rx={18} fill="rgba(18,18,18,.05)" stroke="rgba(18,18,18,.14)" />
+      <rect x={20} y={60} width={270} height={400} rx={18} fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.14)" />
       {lines.map((l, i) => {
         const show = l.slice(0, Math.max(0, chars - used));
         used += l.length;
@@ -202,11 +202,11 @@ export const CodeMotif: React.FC<{ color: string }> = ({ color }) => {
       })}
       <rect x={40} y={110 + Math.min(3, Math.floor(chars / 12)) * 44} width={12} height={4} fill={C.text} opacity={frame % 10 < 5 ? 1 : 0} />
       {/* phone */}
-      <rect x={320} y={40} width={180} height={360} rx={30} fill="#fbf9f4" stroke={C.text} strokeWidth={5} />
-      <rect x={385} y={52} width={50} height={8} rx={4} fill="rgba(18,18,18,.3)" />
+      <rect x={320} y={40} width={180} height={360} rx={30} fill="#0d0f24" stroke={C.text} strokeWidth={5} />
+      <rect x={385} y={52} width={50} height={8} rx={4} fill="rgba(255,255,255,.3)" />
       <rect x={340} y={86} width={140} height={70} rx={12} fill={color} transform={`scale(1 ${ui(14)})`} style={{ transformOrigin: '410px 86px' }} />
-      <rect x={340} y={170} width={140} height={22} rx={8} fill="rgba(18,18,18,.25)" opacity={ui(18)} />
-      <rect x={340} y={204} width={100} height={22} rx={8} fill="rgba(18,18,18,.15)" opacity={ui(21)} />
+      <rect x={340} y={170} width={140} height={22} rx={8} fill="rgba(255,255,255,.25)" opacity={ui(18)} />
+      <rect x={340} y={204} width={100} height={22} rx={8} fill="rgba(255,255,255,.15)" opacity={ui(21)} />
       <rect x={340} y={330} width={140} height={44} rx={22} fill={C.s} opacity={ui(25)} />
       <text x={410} y={360} textAnchor="middle" fill={C.bg} fontFamily={DISPLAY} fontWeight={700} fontSize={18} opacity={ui(25)}>
         SHIP IT
