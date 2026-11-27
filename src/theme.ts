@@ -1,22 +1,29 @@
 import { loadFont } from '@remotion/fonts';
 import { staticFile } from 'remotion';
 
-// Same palette + type as index.html so the reel feels native to the site.
+// "Studio paper" palette: warm paper, ink, one hot signal orange and a cobalt blue.
+// The site CSS (src/site/site.css) uses the same tokens.
 export const C = {
-  bg: '#050510',
-  p: '#6366f1',
-  p2: '#818cf8',
-  s: '#f97316',
-  t: '#06b6d4',
-  g1: '#a855f7',
-  g2: '#ec4899',
-  green: '#10b981',
-  text: '#f1f0ff',
-  muted: 'rgba(241,240,255,0.55)',
+  bg: '#f3efe6',
+  ink: '#121212',
+  p: '#2b4dff', // cobalt
+  p2: '#2b4dff',
+  s: '#ff4d1c', // signal orange
+  t: '#0f9e9e',
+  g1: '#7b3cff',
+  g2: '#ff3d8b',
+  green: '#1f9d55',
+  text: '#121212',
+  muted: 'rgba(18,18,18,0.55)',
+  line: 'rgba(18,18,18,0.14)',
 };
 
-// Fonts are vendored in public/fonts (variable woff2, latin subset) so renders work offline.
-export const DISPLAY = 'Unbounded';
-export const BODY = 'Plus Jakarta Sans';
-loadFont({ family: DISPLAY, url: staticFile('fonts/Unbounded.woff2'), weight: '200 900' });
-loadFont({ family: BODY, url: staticFile('fonts/PlusJakartaSans.woff2'), weight: '200 800' });
+// Fonts are vendored in public/fonts (latin subset) so renders work offline.
+export const DISPLAY = 'Space Grotesk';
+export const BODY = 'Space Grotesk';
+export const SERIF = 'Instrument Serif';
+export const MONO = 'JetBrains Mono';
+loadFont({ family: DISPLAY, url: staticFile('fonts/SpaceGrotesk.woff2'), weight: '300 700' });
+loadFont({ family: SERIF, url: staticFile('fonts/InstrumentSerif.woff2') });
+loadFont({ family: SERIF, url: staticFile('fonts/InstrumentSerif-Italic.woff2'), style: 'italic' });
+loadFont({ family: MONO, url: staticFile('fonts/JetBrainsMono.woff2'), weight: '400 700' });

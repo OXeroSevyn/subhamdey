@@ -17,8 +17,8 @@ const Blob: React.FC<{ color: string; size: number; x: number; y: number; r: num
         top: y + Math.sin(a) * r - size / 2,
         borderRadius: '50%',
         background: `radial-gradient(circle, ${color} 0%, transparent 65%)`,
-        opacity: 0.55,
-        filter: 'blur(40px)',
+        opacity: 0.22,
+        filter: 'blur(60px)',
       }}
     />
   );
@@ -37,14 +37,14 @@ export const Backdrop: React.FC = () => {
       <AbsoluteFill
         style={{
           backgroundImage:
-            'linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px)',
+            'linear-gradient(rgba(18,18,18,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(18,18,18,.045) 1px, transparent 1px)',
           backgroundSize: '80px 80px',
           backgroundPosition: `${shift}px ${shift}px`,
           maskImage: 'radial-gradient(ellipse at center, black 30%, transparent 75%)',
         }}
       />
       {/* vignette */}
-      <AbsoluteFill style={{ background: 'radial-gradient(ellipse at center, transparent 45%, rgba(5,5,16,.85) 100%)' }} />
+      <AbsoluteFill style={{ background: 'radial-gradient(ellipse at center, transparent 45%, rgba(243,239,230,.9) 100%)' }} />
     </AbsoluteFill>
   );
 };

@@ -15,7 +15,7 @@ export const ContactScene: React.FC = () => {
   const angle = (Math.atan2(ahead.y - p.y, ahead.x - p.x) * 180) / Math.PI;
   const trail = Array.from({ length: 40 }, (_, i) => pos(t - i * 0.004));
   return (
-    <AbsoluteFill style={{ background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 25%, #4c1d95 50%, #6d28d9 75%, #7c3aed 100%)' }}>
+    <AbsoluteFill style={{ background: C.s }}>
       {[0, 1, 2, 3].map((i) => {
         const k = ((t * 2 + i / 4) % 1);
         return (
@@ -38,7 +38,7 @@ export const ContactScene: React.FC = () => {
         {trail.map((q, i) => (i % 2 === 0 ? <circle key={i} cx={q.x} cy={q.y} r={5 - i * 0.1} fill="#fff" opacity={0.5 - i * 0.012} /> : null))}
         <g transform={`translate(${p.x} ${p.y}) rotate(${angle})`}>
           <polygon points="40,0 -30,-24 -16,0 -30,24" fill="#fff" />
-          <polygon points="40,0 -16,0 -30,24" fill={C.s} opacity={0.9} />
+          <polygon points="40,0 -16,0 -30,24" fill={C.ink} opacity={0.85} />
         </g>
       </svg>
     </AbsoluteFill>

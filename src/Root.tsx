@@ -1,6 +1,6 @@
 import { Composition } from 'remotion';
 import { HeroReel, REEL_DURATION } from './HeroReel';
-import { HeroScene } from './scenes/HeroScene';
+import { Viewfinder, VIEWFINDER_FRAMES } from './scenes/Viewfinder';
 import { MotifLoop } from './scenes/MotifLoop';
 import { Orbit } from './scenes/Orbit';
 import { AboutBadge } from './scenes/AboutBadge';
@@ -12,7 +12,7 @@ import { C } from './theme';
 export const Root: React.FC = () => (
   <>
     <Composition id="HeroReel" component={HeroReel} durationInFrames={REEL_DURATION} fps={30} width={1920} height={1080} />
-    <Composition id="HeroScene" component={HeroScene} durationInFrames={360} fps={30} width={1920} height={1080} />
+    <Composition id="Viewfinder" component={Viewfinder} durationInFrames={VIEWFINDER_FRAMES} fps={30} width={1200} height={1500} />
     <Composition id="MotifLoop" component={MotifLoop} durationInFrames={90} fps={30} width={520} height={520} defaultProps={{ kind: 'design' as const, color: C.p }} />
     <Composition id="Orbit" component={Orbit} durationInFrames={300} fps={30} width={900} height={500} defaultProps={{ radius: 330, size: 70 }} />
     <Composition id="AboutBadge" component={AboutBadge} durationInFrames={300} fps={30} width={600} height={600} />

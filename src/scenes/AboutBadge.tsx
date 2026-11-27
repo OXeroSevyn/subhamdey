@@ -1,5 +1,5 @@
 import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig } from 'remotion';
-import { C, DISPLAY } from '../theme';
+import { C, DISPLAY, MONO } from '../theme';
 
 // Spinning gradient rings around an "SD" monogram, with role words orbiting.
 const ROLES = ['DESIGNER', 'FILMMAKER', 'DEVELOPER', 'EDUCATOR'];
@@ -31,7 +31,7 @@ export const AboutBadge: React.FC = () => {
         <defs>
           <path id="ring" d="M300,300 m-232,0 a232,232 0 1,1 464,0 a232,232 0 1,1 -464,0" />
         </defs>
-        <text fill={C.muted} fontFamily={DISPLAY} fontSize={22} letterSpacing={6}>
+        <text fill={C.ink} fontFamily={MONO} fontSize={22} letterSpacing={6}>
           <textPath href="#ring">{ROLES.map((r) => `${r}  ✦  `).join('')}</textPath>
         </text>
       </svg>
@@ -43,13 +43,13 @@ export const AboutBadge: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: `linear-gradient(135deg, ${C.p}, ${C.g1} 50%, ${C.s})`,
+          background: C.ink,
           transform: `scale(${pop}) rotate(${(1 - pop) * -30}deg)`,
-          boxShadow: `0 30px 90px -20px ${C.p}`,
+          boxShadow: `18px 18px 0 ${C.s}`,
           fontFamily: DISPLAY,
-          fontWeight: 900,
+          fontWeight: 700,
           fontSize: 130,
-          color: '#fff',
+          color: C.bg,
           letterSpacing: -4,
         }}
       >
