@@ -18,9 +18,9 @@ export const C = {
 };
 
 // Fonts are vendored in public/fonts (latin subset) so renders work offline.
-export const DISPLAY = 'Space Grotesk';
-export const BODY = 'Space Grotesk';
-export const SERIF = 'Space Grotesk';
+export const DISPLAY = 'DM Sans';
+export const BODY = 'DM Sans';
+export const SERIF = 'DM Sans';
 export const MONO = 'JetBrains Mono';
-loadFont({ family: DISPLAY, url: staticFile('fonts/SpaceGrotesk.woff2'), weight: '300 700' });
+loadFont({ family: DISPLAY, url: staticFile('fonts/DMSans.woff2'), weight: '300 700' });
 loadFont({ family: MONO, url: staticFile('fonts/JetBrainsMono.woff2'), weight: '400 700' });
