@@ -16,9 +16,27 @@ gsap.registerPlugin(ScrollTrigger);
 const EMAIL = 'subhamdey.one@gmail.com';
 // TODO(Subham): add real proof when ready, e.g. { value: 250, label: 'Students taught', color: C.s }
 const STATS: Stat[] = [
-  { value: 6, label: 'Courses', color: '#d4ff3a' },
+  { value: 6, label: 'Courses', color: '#ff7ab6' },
   { value: 3, label: 'Design · Film · Code', color: C.p2 },
   { value: 'Blend Mode', label: 'Studio on IG & YT', color: C.g2 },
+];
+// pulled from each course's audience notes
+const WHO = [
+  ['Total beginners', "Just got your first camera, or never opened Photoshop? Graphic Design and Camera Handling start from zero.", ['design', 'camera']],
+  ['YouTubers & creators', 'Shoot footage that looks cinematic, cut it with rhythm, and add motion that stops the scroll.', ['edit', 'cine', 'motion']],
+  ['Designers levelling up', 'Already design? Add motion, kinetic type and broadcast graphics to your toolkit.', ['motion']],
+  ['Aspiring filmmakers', 'Composition, light, lenses, shot lists and storyboards. Learn to see like a DP.', ['cine', 'camera']],
+  ['Entrepreneurs & brands', 'Logos, posters, social graphics and brand kits you can make yourself, with intention.', ['design']],
+  ['Builders without a CS degree', 'Ship a real Android app with Kotlin, Compose or Flutter, plus AI tools like Cursor and Claude.', ['code']],
+] as const;
+const TOOLS = [...new Set(COURSES.flatMap((c) => c.tools))];
+// TODO(Subham): add fees, batch dates, online vs in-person, duration once decided
+const FAQ = [
+  ['Do I need any experience?', 'No. Graphic Design needs no prior experience, Camera Handling starts with your first camera, and Vibe Coding needs no CS degree.'],
+  ['Which software will I use?', 'Industry tools: Photoshop, Illustrator, After Effects, Premiere Pro, DaVinci Resolve, Android Studio and more. Each course lists its own.'],
+  ['What will I actually make?', 'Real work: logos and brand kits, kinetic type, edited stories, shot lists, manual-mode photos, and a working Android app.'],
+  ['Can I take more than one course?', 'Yes. The six are designed to stack: design feeds motion, camera feeds cinematography, cinematography feeds editing.'],
+  ['How do I join, and what does it cost?', "Email me with the course you're after and I'll reply with the current batches, format and fees."],
 ];
 const PRINCIPLES = [
   ['Learn by making', 'Every class ends with something real: a poster, a cut, a shot list, an app on your phone.'],
@@ -86,10 +104,8 @@ function CourseDialog({ course, onClose }: { course: Course; onClose: () => void
 export function App() {
   const [ready, setReady] = useState(false);
   const [open, setOpen] = useState<Course | null>(null);
-  const [hover, setHover] = useState<Course | null>(null);
   const last = useRef<HTMLElement | null>(null);
   const root = useRef<HTMLDivElement>(null);
-  const preview = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
 
   // smooth scroll
@@ -148,7 +164,7 @@ export function App() {
       }
 
       // course rows stagger in
-      gsap.from('.row', { y: 40, opacity: 0, duration: 1, ease: 'expo.out', stagger: 0.07, scrollTrigger: { trigger: '.rows', start: 'top 80%' } });
+      gsap.utils.toArray<HTMLElement>('[data-stagger]').forEach((g) => gsap.from(g.children, { y: 50, opacity: 0, duration: 1, ease: 'expo.out', stagger: 0.06, scrollTrigger: { trigger: g, start: 'top 85%' } }));
 
       // progress ring
       gsap.to('.prog circle.bar', { strokeDashoffset: 0, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: true } });
@@ -156,26 +172,17 @@ export function App() {
     return () => ctx.revert();
   }, [ready]);
 
-  // hover preview follows the cursor
-  useEffect(() => {
-    if (!preview.current) return;
-    const xTo = gsap.quickTo(preview.current, 'x', { duration: 0.6, ease: 'power3' });
-    const yTo = gsap.quickTo(preview.current, 'y', { duration: 0.6, ease: 'power3' });
-    const move = (e: PointerEvent) => { xTo(e.clientX); yTo(e.clientY); };
-    window.addEventListener('pointermove', move, { passive: true });
-    return () => window.removeEventListener('pointermove', move);
-  }, []);
-
   const close = () => { setOpen(null); last.current?.focus(); };
 
   return (
     <div ref={root}>
+      <div className="mesh" aria-hidden="true"><i /><i /><i /><i /></div>
       {!ready && <Preloader onDone={() => setReady(true)} />}
 
       <header className="bar">
         <a href="#top" className="logo" aria-label="Subham Dey, back to top">SD<span>●</span></a>
         <nav aria-label="Sections">
-          <a href="#reel">Reel</a><a href="#courses">Courses</a><a href="#about">About</a>
+          <a href="#courses">Courses</a><a href="#who">Who it's for</a><a href="#studio">Studio</a><a href="#about">About</a><a href="#faq">FAQ</a>
         </nav>
         <a href="#contact" className="btn sm"><span>Start a course</span><i>→</i></a>
       </header>
@@ -227,25 +234,50 @@ export function App() {
               <span className="mono">( 02 ) Courses</span>
               <h2 data-split><Split text="Six disciplines," /><Split text="one educator." className="acc" /></h2>
             </div>
-            <div className="rows" onPointerLeave={() => setHover(null)}>
+            <div className="cards" data-stagger>
               {COURSES.map((c) => (
-                <button key={c.key} className="row" style={{ '--c': c.color } as React.CSSProperties}
-                  onPointerEnter={() => setHover(c)} onFocus={() => setHover(c)} onBlur={() => setHover(null)}
+                <button key={c.key} className="card glass" style={{ '--c': c.color } as React.CSSProperties}
                   onClick={(e) => { last.current = e.currentTarget; setOpen(c); }} aria-haspopup="dialog">
-                  <span className="mono n">{c.num}</span>
-                  <span className="t">{c.title}</span>
-                  <span className="mono tag">{c.label}</span>
-                  <span className="arr" aria-hidden="true">↗</span>
+                  <div className="top">
+                    <div className="ic"><LoopPlayer component={MotifLoop} inputProps={{ kind: c.key, color: c.color }} width={260} height={260} frames={90} stillFrame={30} /></div>
+                    <div><span className="mono">{c.num} · {c.label}</span><h3>{c.title}</h3></div>
+                  </div>
+                  <p>{c.short}</p>
+                  <ul>{c.outcomes.slice(0, 3).map((o) => <li key={o}>{o}</li>)}</ul>
+                  <div className="chips">{c.tools.slice(0, 4).map((t) => <span className="chip" key={t}>{t}</span>)}{c.tools.length > 4 && <span className="chip">+{c.tools.length - 4}</span>}</div>
+                  <span className="more">Full syllabus ↗</span>
                 </button>
               ))}
             </div>
           </div>
         </section>
 
+        <section className="block" id="who" style={{ paddingTop: 0 }}>
+          <div className="wrap">
+            <div className="sec-head">
+              <span className="mono">( 03 ) Who it's for</span>
+              <h2 data-split><Split text="Built for" /><Split text="where you are." className="acc" /></h2>
+            </div>
+            <div className="who" data-stagger>
+              {WHO.map(([t, d, ks]) => (
+                <article className="glass" key={t}>
+                  <span className="mono">{ks.map((k) => COURSES.find((c) => c.key === k)!.title).join(' · ')}</span>
+                  <b>{t}</b><p>{d}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section aria-label="Toolbox">
+          <div className="mq"><div className="mq-in">{[...TOOLS.slice(0, 14), ...TOOLS.slice(0, 14)].map((t, i) => <span key={i}>{t}</span>)}</div></div>
+          <div className="mq rev"><div className="mq-in">{[...TOOLS.slice(14), ...TOOLS.slice(14)].map((t, i) => <span key={i}>{t}</span>)}</div></div>
+        </section>
+
         <section className="h-wrap" aria-label="How I teach">
           <div className="h-track">
             <div className="h-intro">
-              <span className="mono">( 03 ) Method</span>
+              <span className="mono">( 04 ) Method</span>
               <h2 data-split><Split text="How I" /><Split text="teach." className="acc" /></h2>
             </div>
             {PRINCIPLES.map(([t, d], i) => (
@@ -258,7 +290,26 @@ export function App() {
           </div>
         </section>
 
-        <section className="block" id="about">
+        <section className="block" id="studio">
+          <div className="wrap studio">
+            <div className="big glass" data-rise>
+              <span className="mono">( 05 ) The studio</span>
+              <h3>Blend Mode <span className="gt">Studio</span></h3>
+              {/* TODO(Subham): add what Blend Mode makes (clients, formats, launch year) */}
+              <p>Blend Mode is where I make and share work in public: design breakdowns, motion pieces and films on Instagram and YouTube. It's the same practice students learn from in class.</p>
+              <div className="links">
+                <a className="btn" href="https://www.instagram.com/blendmodestudio" target="_blank" rel="noopener"><span>Instagram</span><i>→</i></a>
+                <a className="btn ghost" href="https://www.youtube.com/@blendmodestudioofficial" target="_blank" rel="noopener"><span>YouTube</span><i>→</i></a>
+              </div>
+            </div>
+            <div className="side" data-stagger>
+              <article className="glass"><span className="mono">Portfolio</span><b>Design work on Behance</b><p className="lead">Brand identities, posters and layouts.</p><a className="mono" href="https://www.behance.net/subhamdey4" target="_blank" rel="noopener">behance.net/subhamdey4 ↗</a></article>
+              <article className="glass"><span className="mono">Network</span><b>Connect on LinkedIn</b><p className="lead">For collaborations, workshops and studio work.</p><a className="mono" href="https://www.linkedin.com/in/subhamdeyone" target="_blank" rel="noopener">linkedin.com/in/subhamdeyone ↗</a></article>
+            </div>
+          </div>
+        </section>
+
+        <section className="block" id="about" style={{ paddingTop: 0 }}>
           <div className="wrap about">
             <div className="badge" data-rise>
               {/* TODO(Subham): drop a square photo at public/assets/subham.jpg and it appears over the animated badge */}
@@ -266,7 +317,7 @@ export function App() {
               <img src="/assets/subham.jpg" alt="Portrait of Subham Dey" onError={(e) => e.currentTarget.remove()} />
             </div>
             <div>
-              <span className="mono">( 04 ) About</span>
+              <span className="mono">( 06 ) About</span>
               <h2 data-split><Split text="I don't just create." /><Split text="I teach others how to see." className="acc" /></h2>
               <p className="bio" data-rise>I'm a multidisciplinary creative and educator from Siliguri, West Bengal. My work lives where design, film and technology meet: brand identities, cinematic sequences, Android apps. I bring that real-world practice into every class, so students learn more than tools. They build taste.</p>
               <div data-rise>
@@ -277,9 +328,21 @@ export function App() {
           </div>
         </section>
 
+        <section className="block" id="faq" style={{ paddingTop: 0 }}>
+          <div className="wrap">
+            <div className="sec-head">
+              <span className="mono">( 07 ) FAQ</span>
+              <h2 data-split><Split text="Good" /><Split text="questions." className="acc" /></h2>
+            </div>
+            <div className="faq" data-stagger>
+              {FAQ.map(([q, a]) => <details className="glass" key={q}><summary>{q}</summary><p>{a}</p></details>)}
+            </div>
+          </div>
+        </section>
+
         <section className="cta" id="contact">
           <div className="wrap">
-            <span className="mono">( 05 ) Contact</span>
+            <span className="mono">( 08 ) Contact</span>
             <h2 data-split><Split text="Working on something" /><Split text="creative?" className="acc" /></h2>
             <a className="mail" href={`mailto:${EMAIL}`} data-rise>{EMAIL}<i>↗</i></a>
             <div className="cta-foot mono" data-rise>
@@ -298,12 +361,6 @@ export function App() {
       </main>
 
       <footer className="wrap mono"><span>© 2026 Subham Dey</span><span>Built with Three.js, GSAP, Lenis &amp; Remotion</span></footer>
-
-      <div className={`preview ${hover && !open ? 'on' : ''}`} ref={preview} aria-hidden="true">
-        <div className="pv-in" style={{ '--c': hover?.color } as React.CSSProperties}>
-          {hover && <LoopPlayer key={hover.key} component={MotifLoop} inputProps={{ kind: hover.key, color: hover.color }} width={520} height={520} frames={90} stillFrame={20} />}
-        </div>
-      </div>
 
       {open && <CourseDialog course={open} onClose={close} />}
     </div>
