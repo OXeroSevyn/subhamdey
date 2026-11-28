@@ -66,20 +66,7 @@ export function DotField() {
         uA: { value: new THREE.Color('#3a3a3a') }, uB: { value: new THREE.Color('#ffffff') },
       },
     });
-    const field = new THREE.Points(geo, mat);
-    scene.add(field);
-
-    // B&W wireframe core the camera flies toward on scroll
-    const core = new THREE.Group();
-    const knotGeo = new THREE.TorusKnotGeometry(1.4, 0.42, small ? 120 : 220, small ? 12 : 20, 2, 3);
-    const knotMat = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0.16 });
-    const knot = new THREE.Mesh(knotGeo, knotMat);
-    const ringGeo = new THREE.IcosahedronGeometry(2.6, 1);
-    const ringMat = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0.07 });
-    const shell = new THREE.Mesh(ringGeo, ringMat);
-    core.add(knot, shell);
-    core.position.set(small ? 0 : 3.2, 0.5, 2.2);
-    scene.add(core);
+    scene.add(new THREE.Points(geo, mat));
 
     const size = () => {
       const w = el.clientWidth, h = el.clientHeight;
@@ -91,9 +78,7 @@ export function DotField() {
     // project pointer onto the z=0 plane
     const ray = new THREE.Raycaster(), plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), hit = new THREE.Vector3();
     const target = new THREE.Vector2(99, 99); let amt = 0, amtT = 0;
-    let prog = 0, mx = 0, my = 0;
     const onMove = (e: PointerEvent) => {
-      mx = (e.clientX / window.innerWidth) * 2 - 1; my = -((e.clientY / window.innerHeight) * 2 - 1);
       const r = el.getBoundingClientRect();
       ray.setFromCamera(new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), camera);
       if (ray.ray.intersectPlane(plane, hit)) { target.set(hit.x, hit.y); amtT = 1; }
@@ -111,23 +96,6 @@ export function DotField() {
       const tt = clock.getElapsedTime(); mat.uniforms.uTime.value = tt;
       (mat.uniforms.uMouse.value as THREE.Vector2).lerp(target, 0.08);
       amt += (amtT - amt) * 0.05; mat.uniforms.uMouseAmt.value = amt;
-      // scroll progress through the hero drives the camera flight
-      const h = el.clientHeight || 1;
-      const pT = Math.min(Math.max(window.scrollY / h, 0), 1);
-      prog += (pT - prog) * 0.08;
-      const e = prog * prog * (3 - 2 * prog);
-      camera.position.set(
-        THREE.MathUtils.lerp(0, core.position.x * 0.9, e) + mx * 0.6,
-        THREE.MathUtils.lerp(-6, core.position.y - 0.2, e) + my * 0.4,
-        THREE.MathUtils.lerp(12, core.position.z + 3.2, e),
-      );
-      camera.lookAt(core.position.x * e, core.position.y * e, core.position.z * e);
-      camera.rotation.z += e * 0.35;
-      knot.rotation.set(tt * 0.18 + e * 2, tt * 0.25, 0);
-      shell.rotation.set(-tt * 0.07, tt * 0.1 + e, 0);
-      knotMat.opacity = 0.16 + e * (small ? 0.18 : 0.5);
-      ringMat.opacity = 0.07 + e * 0.12;
-      core.scale.setScalar(1 + e * 0.4);
       renderer.render(scene, camera);
       raf = requestAnimationFrame(loop);
     };
@@ -136,7 +104,7 @@ export function DotField() {
     return () => {
       cancelAnimationFrame(raf); io.disconnect(); ro.disconnect();
       window.removeEventListener('pointermove', onMove); document.removeEventListener('pointerleave', onLeave);
-      geo.dispose(); mat.dispose(); knotGeo.dispose(); knotMat.dispose(); ringGeo.dispose(); ringMat.dispose(); renderer.dispose(); el.removeChild(renderer.domElement);
+      geo.dispose(); mat.dispose(); renderer.dispose(); el.removeChild(renderer.domElement);
     };
   }, []);
   return <div ref={host} className="dots" aria-hidden="true" />;
