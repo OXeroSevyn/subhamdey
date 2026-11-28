@@ -304,8 +304,8 @@ footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1r
 .mail:hover { color: #fff; border-color: #fff }
 .mail i, .cta-foot nav a:hover { color: #fff }
 /* italic outline accent instead of colour */
-.acc .wi { background: none; -webkit-background-clip: initial; background-clip: initial; color: transparent; -webkit-text-stroke: 1.5px #fff; animation: none; font-style: italic }
-.gt { background: none; -webkit-background-clip: initial; color: transparent; -webkit-text-stroke: 1.5px #fff; animation: none; font-style: italic }
+.acc .wi { background: none; -webkit-background-clip: initial; background-clip: initial; color: #8c8c8c; -webkit-text-stroke: 0; animation: none; font-style: italic }
+.gt { background: none; -webkit-background-clip: initial; color: #8c8c8c; -webkit-text-stroke: 0; animation: none; font-style: italic }
 .panel:hover .pn { -webkit-text-stroke-color: #fff; background: none; color: transparent; animation: none }
 /* Remotion players go monochrome */
 .pan-art, .card .ic, .dlg .art, .reel-frame, .badge > div, .stats, .pv-in { filter: grayscale(1) contrast(1.1) }
