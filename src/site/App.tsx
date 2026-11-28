@@ -5,7 +5,7 @@ import Lenis from 'lenis';
 import { HeroReel, REEL_DURATION } from '../HeroReel';
 import { MotifLoop } from '../scenes/MotifLoop';
 import { AboutBadge } from '../scenes/AboutBadge';
-import { StatsScene, type Stat } from '../scenes/StatsScene';
+import type { Stat } from '../scenes/StatsScene';
 import { C } from '../theme';
 import { COURSES, type Course } from './courses';
 import { LoopPlayer, reduceMotion } from './LoopPlayer';
@@ -312,20 +312,32 @@ export function App() {
         </section>
 
         <section className="block" id="about" style={{ paddingTop: 0 }}>
-          <div className="wrap about">
-            <div className="badge" data-rise>
-              {/* TODO(Subham): drop a square photo at public/assets/subham.jpg and it appears over the animated badge */}
-              <LoopPlayer component={AboutBadge} width={600} height={600} frames={300} stillFrame={40} />
-              <img src="/assets/subham.jpg" alt="Portrait of Subham Dey" onError={(e) => e.currentTarget.remove()} />
-            </div>
-            <div>
+          <div className="wrap ab">
+            <div className="ab-head">
               <span className="mono">( 06 ) About</span>
               <h2 data-split><Split text="I don't just create." /><Split text="I teach others how to see." className="acc" /></h2>
-              <p className="bio" data-rise>I'm a multidisciplinary creative and educator from Siliguri, West Bengal. My work lives where design, film and technology meet: brand identities, cinematic sequences, Android apps. I bring that real-world practice into every class, so students learn more than tools. They build taste.</p>
-              <div data-rise>
-                <LoopPlayer className="stats" component={StatsScene} inputProps={{ stats: STATS }} width={1200} height={380} frames={240} stillFrame={120}
-                  label={STATS.map((s) => `${s.value} ${s.label}`).join(', ')} />
+            </div>
+            <div className="ab-grid">
+              <figure className="badge" data-rise>
+                {/* TODO(Subham): drop a square photo at public/assets/subham.jpg and it appears over the animated badge */}
+                <LoopPlayer component={AboutBadge} width={600} height={600} frames={300} stillFrame={40} />
+                <img src="/assets/subham.jpg" alt="Portrait of Subham Dey" onError={(e) => e.currentTarget.remove()} />
+                <figcaption className="mono"><span>Subham Dey</span><span>Siliguri, IN</span></figcaption>
+              </figure>
+              <div className="ab-copy" data-rise>
+                <p className="bio">I'm a multidisciplinary creative and educator from Siliguri, West Bengal. My work lives where design, film and technology meet: brand identities, cinematic sequences, Android apps.</p>
+                <p className="bio dim">I bring that real-world practice into every class, so students learn more than tools. <em>They build taste.</em></p>
+                <ul className="ab-disc mono">
+                  <li><b>01</b>Design<span>Brand · Type · Layout</span></li>
+                  <li><b>02</b>Film<span>Edit · Colour · Motion</span></li>
+                  <li><b>03</b>Code<span>Web · Android · Creative</span></li>
+                </ul>
               </div>
+              <dl className="ab-stats" data-stagger>
+                {STATS.map((st) => (
+                  <div key={st.label}><dt className="mono">{st.label}</dt><dd>{st.value}</dd></div>
+                ))}
+              </dl>
             </div>
           </div>
         </section>
