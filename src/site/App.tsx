@@ -15,11 +15,11 @@ import { METHOD_SCENES } from '../scenes/MethodScenes';
 gsap.registerPlugin(ScrollTrigger);
 
 const EMAIL = 'subhamdey.one@gmail.com';
-// TODO(Subham): add real proof when ready, e.g. { value: 250, label: 'Students taught', color: C.s }
+// TODO(Subham): add real proof when ready, e.g. { value: 250, label: 'Students taught', color: '#ffffff' }
 const STATS: Stat[] = [
-  { value: 6, label: 'Courses', color: '#ff7ab6' },
-  { value: 3, label: 'Design · Film · Code', color: C.p2 },
-  { value: 'Blend Mode', label: 'Studio on IG & YT', color: C.g2 },
+  { value: 6, label: 'Courses', color: '#ffffff' },
+  { value: 3, label: 'Design · Film · Code', color: '#ffffff' },
+  { value: 'Blend Mode', label: 'Studio on IG & YT', color: '#ffffff' },
 ];
 // pulled from each course's audience notes
 const WHO = [
@@ -177,7 +177,7 @@ export function App() {
 
   return (
     <div ref={root}>
-      <div className="mesh" aria-hidden="true"><i /><i /><i /><i /></div>
+      <div className="mesh" aria-hidden="true"><i /><i /></div>
       {!ready && <Preloader onDone={() => setReady(true)} />}
 
       <header className="bar">

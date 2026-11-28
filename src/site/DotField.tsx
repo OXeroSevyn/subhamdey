@@ -63,7 +63,7 @@ export function DotField() {
       vertexShader: VERT, fragmentShader: FRAG, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
       uniforms: {
         uTime: { value: 0 }, uMouse: { value: new THREE.Vector2(99, 99) }, uMouseAmt: { value: 0 }, uPR: { value: pr },
-        uA: { value: new THREE.Color('#5a4f8f') }, uB: { value: new THREE.Color('#ff7ab6') },
+        uA: { value: new THREE.Color('#3a3a3a') }, uB: { value: new THREE.Color('#ffffff') },
       },
     });
     scene.add(new THREE.Points(geo, mat));
@@ -94,7 +94,6 @@ export function DotField() {
     const loop = () => {
       if (!inView) return;
       const tt = clock.getElapsedTime(); mat.uniforms.uTime.value = tt;
-      (mat.uniforms.uB.value as THREE.Color).setHSL((0.92 + tt * 0.03) % 1, 0.95, 0.66);
       (mat.uniforms.uMouse.value as THREE.Vector2).lerp(target, 0.08);
       amt += (amtT - amt) * 0.05; mat.uniforms.uMouseAmt.value = amt;
       renderer.render(scene, camera);

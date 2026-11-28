@@ -8,7 +8,7 @@ export type Course = {
 
 export const COURSES: Course[] = [
   {
-    key: 'design', num: '01', icon: '🎨', title: 'Graphic Design', color: C.p, tag: 'Design Thinking', label: 'Design Thinking', skillTag: 'Visual Design',
+    key: 'design', num: '01', icon: '🎨', title: 'Graphic Design', color: '#f5f5f5', tag: 'Design Thinking', label: 'Design Thinking', skillTag: 'Visual Design',
     skill: 'Crafting visual identities, brand systems, typography layouts, and print collateral that communicate with clarity and character.',
     short: 'Typography, layout, color theory, logo design, and brand systems. Think visually and design with intention.',
     summary: "From design fundamentals to professional-level visual work. You'll develop an eye for composition, hierarchy, and visual communication that sets great design apart.",
@@ -17,7 +17,7 @@ export const COURSES: Course[] = [
     audience: 'Perfect for beginners, aspiring designers, content creators, entrepreneurs, and anyone who wants to communicate visually. No prior experience needed.',
   },
   {
-    key: 'motion', num: '02', icon: '✨', title: 'Motion Graphics', color: C.s, tag: 'After Effects', label: 'After Effects', skillTag: 'Animation',
+    key: 'motion', num: '02', icon: '✨', title: 'Motion Graphics', color: '#f5f5f5', tag: 'After Effects', label: 'After Effects', skillTag: 'Animation',
     skill: 'Bringing ideas to life through keyframing, kinetic type, and expressive motion design.',
     short: 'Keyframing, animation principles, kinetic typography, and motion design using After Effects and industry tools.',
     summary: "Bring static visuals to life with animation. From timing and easing curves to complex animated sequences. You'll create work that moves, feels alive, and communicates dynamically.",
@@ -26,7 +26,7 @@ export const COURSES: Course[] = [
     audience: 'Ideal for graphic designers wanting to add motion, video editors looking to level up, and content creators who want eye-catching animated visuals.',
   },
   {
-    key: 'edit', num: '03', icon: '🎬', title: 'Video Editing', color: C.t, tag: 'Premiere / DaVinci', label: 'Premiere / DaVinci', skillTag: 'Post Production',
+    key: 'edit', num: '03', icon: '🎬', title: 'Video Editing', color: '#f5f5f5', tag: 'Premiere / DaVinci', label: 'Premiere / DaVinci', skillTag: 'Post Production',
     skill: 'Cutting, color grading, and shaping raw footage into compelling narratives.',
     short: 'Cuts, transitions, color grading, audio sync, and narrative pacing — shaping footage into professional stories.',
     summary: 'Editing is storytelling. Shape raw footage into compelling narratives through pacing, rhythm, transitions, color grading, and audio design.',
@@ -35,7 +35,7 @@ export const COURSES: Course[] = [
     audience: 'Great for aspiring video editors, YouTubers, social media managers, filmmakers, and anyone who wants to tell compelling stories through video.',
   },
   {
-    key: 'cine', num: '04', icon: '🎥', title: 'Cinematography', color: C.green, tag: 'Visual Storytelling', label: 'Visual Storytelling', skillTag: 'Filmmaking',
+    key: 'cine', num: '04', icon: '🎥', title: 'Cinematography', color: '#f5f5f5', tag: 'Visual Storytelling', label: 'Visual Storytelling', skillTag: 'Filmmaking',
     skill: 'Composition, lighting, and visual storytelling through the lens.',
     short: 'Composition, lighting, shot language, and visual storytelling. Learn to see like a director of photography.',
     summary: 'Cinematography is about seeing the world intentionally — crafting images with composition, light, movement, and lens choices that serve the story.',
@@ -44,7 +44,7 @@ export const COURSES: Course[] = [
     audience: 'For aspiring filmmakers, YouTubers, social media creators, documentary makers, and anyone who wants to shoot footage that genuinely looks cinematic.',
   },
   {
-    key: 'camera', num: '05', icon: '📷', title: 'Camera Handling', color: '#fb7185', tag: 'DSLR & Mirrorless', label: 'DSLR & Mirrorless', skillTag: 'Technical',
+    key: 'camera', num: '05', icon: '📷', title: 'Camera Handling', color: '#f5f5f5', tag: 'DSLR & Mirrorless', label: 'DSLR & Mirrorless', skillTag: 'Technical',
     skill: 'Mastering DSLR, mirrorless, and cinema cameras for precision and creative capture.',
     short: 'Exposure, focus, white balance, and full manual technique across DSLR, mirrorless, and cinema cameras.',
     summary: 'Know your camera deeply. Cut through menus and technical jargon to get confident, practical control over any camera — shooting full manual by the end.',
@@ -53,7 +53,7 @@ export const COURSES: Course[] = [
     audience: 'Perfect for beginners who just got their first camera, hobbyist photographers wanting more control, and anyone shooting in Auto who wants to go full Manual.',
   },
   {
-    key: 'code', num: '06', icon: '📱', title: 'Vibe Coding', color: C.g1, tag: 'Android Development', label: 'Android Dev', skillTag: 'Development',
+    key: 'code', num: '06', icon: '📱', title: 'Vibe Coding', color: '#f5f5f5', tag: 'Android Development', label: 'Android Dev', skillTag: 'Development',
     skill: 'Building real Android apps with a creative-first, intuitive approach. No CS degree required.',
     short: 'Android App Development with a creative-first mindset. Build real, functional apps — no CS degree needed.',
     summary: 'A creative-first approach to Android development — building real, functional, beautiful apps without getting lost in CS theory. Zero to shipping your first app.',
